@@ -1,0 +1,21 @@
+{
+  "name": "plugos-server",
+  "version": "1.0.0",
+  "description": "PlugOS Backend API Server",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "db:migrate": "node src/config/migrate.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.11.3",
+    "uuid": "^9.0.0"
+  }
+}

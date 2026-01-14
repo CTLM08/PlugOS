@@ -1,0 +1,18 @@
+# Environment variables (root level catch-all)
+.env
+.env.local
+.env.*.local
+**/.env
+**/.env.local
+**/.env.*.local
+
+# Dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
