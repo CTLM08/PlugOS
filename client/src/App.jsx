@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import Layout from './components/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
 
@@ -8,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import PlugManager from './pages/PlugManager';
 import Settings from './pages/Settings';
 import EmployeeDirectory from './plugs/EmployeeDirectory';
+import AttendanceTracker from './plugs/AttendanceTracker';
 import './index.css';
 
 function PrivateRoute({ children }) {
@@ -21,7 +23,7 @@ function PrivateRoute({ children }) {
     );
   }
 
-  return user ? children : <Navigate to="/login" />;
+  return user ? <Layout>{children}</Layout> : <Navigate to="/login" />;
 }
 
 function PublicRoute({ children }) {
@@ -88,6 +90,14 @@ function AppRoutes() {
         element={
           <PrivateRoute>
             <EmployeeDirectory />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/attendance"
+        element={
+          <PrivateRoute>
+            <AttendanceTracker />
           </PrivateRoute>
         }
       />

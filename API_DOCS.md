@@ -12,6 +12,7 @@ This document contains all API endpoints for the PlugOS platform. Updated progre
 - [Plugs](#plugs)
 - [Employees](#employees)
 - [Departments](#departments)
+- [Attendance](#attendance)
 - [Invites](#invites)
 
 ---
@@ -237,6 +238,50 @@ Create a new department.
   "name": "Engineering",
   "org_id": "uuid",
   "created_at": "2026-01-14T00:00:00Z"
+}
+```
+
+---
+
+## Attendance
+
+Base path: `/api/attendance`
+
+| Method | Endpoint | Description | Auth Required | Role |
+|--------|----------|-------------|---------------|------|
+| GET | `/org/:orgId/status` | Get current clock status | Yes | Any |
+| POST | `/org/:orgId/clock-in` | Clock in | Yes | Any |
+| POST | `/org/:orgId/clock-out` | Clock out | Yes | Any |
+| GET | `/org/:orgId/my-attendance` | Get own attendance records | Yes | Any |
+| GET | `/org/:orgId/team` | Get team attendance for date | Yes | Admin/Manager |
+| POST | `/org/:orgId/leave` | Submit leave request | Yes | Any |
+| GET | `/org/:orgId/leave` | Get own leave requests | Yes | Any |
+| GET | `/org/:orgId/leave/pending` | Get pending leave requests | Yes | Admin/Manager |
+| PUT | `/org/:orgId/leave/:id/review` | Approve/reject leave | Yes | Admin/Manager |
+| GET | `/org/:orgId/leave/all` | Get all leave requests | Yes | Admin/Manager |
+
+### POST /org/:orgId/leave
+Submit a leave request.
+
+**Request Body:**
+```json
+{
+  "leave_type": "annual",
+  "start_date": "2026-01-20",
+  "end_date": "2026-01-22",
+  "reason": "Family vacation"
+}
+```
+
+**Response:** `201 Created`
+
+### PUT /org/:orgId/leave/:id/review
+Approve or reject a leave request.
+
+**Request Body:**
+```json
+{
+  "status": "approved"
 }
 ```
 

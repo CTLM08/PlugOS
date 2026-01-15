@@ -12,6 +12,7 @@ import plugRoutes from './routes/plugs.js';
 import employeeRoutes from './routes/employees.js';
 import departmentRoutes from './routes/departments.js';
 import inviteRoutes from './routes/invites.js';
+import attendanceRoutes from './routes/attendance.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -32,6 +33,7 @@ app.use('/api/plugs', plugRoutes);
 app.use('/api/employees', employeeRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/invites', inviteRoutes);
+app.use('/api/attendance', attendanceRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
