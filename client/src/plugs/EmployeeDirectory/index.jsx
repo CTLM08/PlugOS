@@ -6,7 +6,9 @@ import api from '../../utils/api';
 
 export default function EmployeeDirectory() {
   const { currentOrg, isManager, isAdmin } = useAuth();
-  const [activeTab, setActiveTab] = useState('employees');
+  const [activeTab, setActiveTab] = useState(() => {
+    return localStorage.getItem('employee-tab') || 'employees';
+  });
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,6 +19,11 @@ export default function EmployeeDirectory() {
   const [newDeptName, setNewDeptName] = useState('');
   const [deptLoading, setDeptLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Persist active tab
+  useEffect(() => {
+    localStorage.setItem('employee-tab', activeTab);
+  }, [activeTab]);
 
   useEffect(() => {
     if (currentOrg) {
@@ -338,7 +345,7 @@ export default function EmployeeDirectory() {
 }
 
 // Employee Card Component
-function EmployeeCard({ employee, isManager, onEdit, onDelete }) {
+function EmployeeCard({ employee, isManager, isAdmin, onEdit, onDelete, onResetPassword }) {
   return (
     <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-xl p-5 hover:border-[var(--color-border)] hover:bg-[var(--color-bg-elevated)] transition-all group">
       <div className="flex items-start gap-4">
@@ -374,21 +381,32 @@ function EmployeeCard({ employee, isManager, onEdit, onDelete }) {
       </div>
 
       {isManager && (
-        <div className="mt-4 pt-4 border-t border-[var(--color-border)] flex gap-2">
-          <button
-            onClick={onEdit}
-            className="flex-1 inline-flex items-center justify-center gap-1 text-sm text-[var(--color-text-muted)] hover:text-white py-2 rounded-lg hover:bg-[var(--color-bg-elevated)] transition-colors"
-          >
-            <Icon icon="mdi:pencil-outline" className="w-4 h-4" />
-            Edit
-          </button>
-          <button
-            onClick={onDelete}
-            className="flex-1 inline-flex items-center justify-center gap-1 text-sm text-red-400 hover:text-red-300 py-2 rounded-lg hover:bg-red-500/10 transition-colors"
-          >
-            <Icon icon="mdi:delete-outline" className="w-4 h-4" />
-            Delete
-          </button>
+        <div className="mt-4 pt-4 border-t border-[var(--color-border)]">
+          <div className="flex gap-2">
+            <button
+              onClick={onEdit}
+              className="flex-1 inline-flex items-center justify-center gap-1 text-sm text-[var(--color-text-muted)] hover:text-white py-2 rounded-lg hover:bg-[var(--color-bg-elevated)] transition-colors"
+            >
+              <Icon icon="mdi:pencil-outline" className="w-4 h-4" />
+              Edit
+            </button>
+            <button
+              onClick={onDelete}
+              className="flex-1 inline-flex items-center justify-center gap-1 text-sm text-red-400 hover:text-red-300 py-2 rounded-lg hover:bg-red-500/10 transition-colors"
+            >
+              <Icon icon="mdi:delete-outline" className="w-4 h-4" />
+              Delete
+            </button>
+          </div>
+          {isAdmin && employee.email && (
+            <button
+              onClick={onResetPassword}
+              className="mt-2 w-full inline-flex items-center justify-center gap-1 text-sm text-amber-400 hover:text-amber-300 py-2 rounded-lg hover:bg-amber-500/10 border border-amber-500/30 transition-colors"
+            >
+              <Icon icon="mdi:lock-reset" className="w-4 h-4" />
+              Reset Password
+            </button>
+          )}
         </div>
       )}
     </div>

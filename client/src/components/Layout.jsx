@@ -3,11 +3,13 @@ import { Link, useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
+import PasswordChangeModal from './PasswordChangeModal';
 
 export default function Layout({ children }) {
   const { user, currentOrg, logout, isAdmin } = useAuth();
   const [enabledPlugs, setEnabledPlugs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -184,11 +186,18 @@ export default function Layout({ children }) {
         <nav className="bg-[var(--color-bg-card)] border-b border-[var(--color-border)] sticky top-0 z-10">
           <div className="px-6 lg:px-8">
             <div className="flex justify-end h-16 items-center">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--color-bg-elevated)]">
                   <Icon icon="mdi:account-circle" className="w-5 h-5 text-indigo-400" />
                   <span className="text-sm">{user?.name}</span>
                 </div>
+                <button
+                  onClick={() => setShowPasswordModal(true)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-[var(--color-text-muted)] hover:text-white hover:bg-[var(--color-bg-elevated)] transition-all"
+                  title="Change Password"
+                >
+                  <Icon icon="mdi:lock" className="w-4 h-4" />
+                </button>
                 <button
                   onClick={logout}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/10 border border-red-500/30 hover:border-red-500/50 transition-all"
@@ -202,10 +211,15 @@ export default function Layout({ children }) {
         </nav>
 
         {/* Page Content */}
-        <main className="px-6 lg:px-8 py-8">
+        <main key={location.pathname} className="px-6 lg:px-8 py-8 animate-page">
           {children}
         </main>
       </div>
+
+      {/* Password Change Modal */}
+      {showPasswordModal && (
+        <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />
+      )}
     </div>
   );
 }

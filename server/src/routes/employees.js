@@ -211,4 +211,76 @@ router.get('/org/:orgId/departments', authenticate, requireOrg, checkPlugEnabled
   }
 });
 
+// Reset employee password (admin only) - generates new secure random password
+router.post('/org/:orgId/:employeeId/reset-password', authenticate, requireOrg, checkPlugEnabled, requireRole('admin'), async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+    
+    // Get employee to find their email
+    const empResult = await pool.query(
+      'SELECT email FROM employees WHERE id = $1 AND org_id = $2',
+      [employeeId, req.orgId]
+    );
+    
+    if (empResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
+    
+    const employeeEmail = empResult.rows[0].email;
+    
+    if (!employeeEmail) {
+      return res.status(400).json({ error: 'Employee does not have an email address' });
+    }
+    
+    // Find user with this email
+    const userResult = await pool.query(
+      'SELECT id FROM users WHERE LOWER(email) = LOWER($1)',
+      [employeeEmail]
+    );
+    
+    if (userResult.rows.length === 0) {
+      return res.status(400).json({ error: 'No user account found for this employee' });
+    }
+    
+    const userId = userResult.rows[0].id;
+    
+    // Generate secure random password (12 chars with mixed case, numbers, and special chars)
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%';
+    let newPassword = '';
+    
+    // Ensure at least one of each required type
+    newPassword += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 26)];
+    newPassword += 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)];
+    newPassword += '0123456789'[Math.floor(Math.random() * 10)];
+    newPassword += '!@#$%'[Math.floor(Math.random() * 5)];
+    
+    // Fill rest randomly
+    for (let i = 0; i < 8; i++) {
+      newPassword += chars[Math.floor(Math.random() * chars.length)];
+    }
+    
+    // Shuffle the password
+    newPassword = newPassword.split('').sort(() => Math.random() - 0.5).join('');
+    
+    // Hash and update password
+    const bcrypt = await import('bcryptjs');
+    const passwordHash = await bcrypt.default.hash(newPassword, 12);
+    
+    await pool.query(
+      'UPDATE users SET password_hash = $1 WHERE id = $2',
+      [passwordHash, userId]
+    );
+    
+    // Return the new password (admin should securely share this with employee)
+    res.json({ 
+      message: 'Password reset successfully',
+      newPassword,
+      warning: 'Please securely share this password with the employee. They should change it after first login.'
+    });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({ error: 'Failed to reset password' });
+  }
+});
+
 export default router;
