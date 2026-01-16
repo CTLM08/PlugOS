@@ -30,12 +30,8 @@ export default function Layout({ children }) {
   };
 
   const getPlugIcon = (icon) => {
-    const icons = {
-      users: 'mdi:account-group',
-      clock: 'mdi:clock-outline',
-      default: 'mdi:puzzle'
-    };
-    return icons[icon] || icons.default;
+    // Use the icon from database directly, or fallback to puzzle icon
+    return icon || 'mdi:puzzle';
   };
 
   const getPlugRoute = (slug) => {

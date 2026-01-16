@@ -3,7 +3,7 @@
 
 -- Add plug entry
 INSERT INTO plugs (name, slug, description, icon, is_active)
-VALUES ('Attendance Tracker', 'attendance-tracker', 'Track employee attendance and leave requests', 'mdi:clock-check-outline', true)
+VALUES ('Attendance Tracker', 'attendance-tracker', 'Track employee attendance and leave requests', 'mdi:calendar-clock', true)
 ON CONFLICT DO NOTHING;
 
 -- Attendance records table (clock in/out)

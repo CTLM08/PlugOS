@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
+import ConfirmModal from '../../components/ConfirmModal';
 
 export default function EmployeeDirectory() {
   const { currentOrg, isManager, isAdmin } = useAuth();
@@ -19,6 +20,19 @@ export default function EmployeeDirectory() {
   const [newDeptName, setNewDeptName] = useState('');
   const [deptLoading, setDeptLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+  const [resetPasswordData, setResetPasswordData] = useState(null);
+  const [resetPasswordLoading, setResetPasswordLoading] = useState(false);
+  
+  // Confirm modal state
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    variant: 'danger',
+    onConfirm: () => {},
+    loading: false
+  });
 
   // Persist active tab
   useEffect(() => {
@@ -46,15 +60,27 @@ export default function EmployeeDirectory() {
     }
   };
 
-  const handleDeleteEmployee = async (id) => {
-    if (!confirm('Are you sure you want to delete this employee?')) return;
-
-    try {
-      await api.delete(`/employees/org/${currentOrg.id}/${id}`);
-      setEmployees(employees.filter(e => e.id !== id));
-    } catch (error) {
-      console.error('Failed to delete employee:', error);
-    }
+  const confirmDeleteEmployee = (employee) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete Employee',
+      message: `Are you sure you want to delete ${employee.name}? This action cannot be undone.`,
+      variant: 'danger',
+      confirmText: 'Delete',
+      loading: false,
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, loading: true }));
+        try {
+          await api.delete(`/employees/org/${currentOrg.id}/${employee.id}`);
+          setEmployees(employees.filter(e => e.id !== employee.id));
+          setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        } catch (error) {
+          console.error('Failed to delete employee:', error);
+          setError('Failed to delete employee');
+          setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        }
+      }
+    });
   };
 
   const handleCreateDept = async (e) => {
@@ -74,15 +100,56 @@ export default function EmployeeDirectory() {
     }
   };
 
-  const handleDeleteDept = async (deptId) => {
-    if (!confirm('Delete this department? Employees will remain but lose department assignment.')) return;
-    
-    try {
-      await api.delete(`/departments/org/${currentOrg.id}/${deptId}`);
-      setDepartments(departments.filter(d => d.id !== deptId));
-    } catch (err) {
-      setError('Failed to delete department');
-    }
+  const confirmDeleteDept = (dept) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete Department',
+      message: `Delete "${dept.name}"? Employees will remain but lose their department assignment.`,
+      variant: 'warning',
+      confirmText: 'Delete',
+      loading: false,
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, loading: true }));
+        try {
+          await api.delete(`/departments/org/${currentOrg.id}/${dept.id}`);
+          setDepartments(departments.filter(d => d.id !== dept.id));
+          setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        } catch (err) {
+          setError('Failed to delete department');
+          setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        }
+      }
+    });
+  };
+
+  const confirmResetPassword = (employee) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Reset Password',
+      message: `Generate a new password for ${employee.name}? They will need to use the new password to log in.`,
+      variant: 'warning',
+      confirmText: 'Reset Password',
+      loading: false,
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, loading: true }));
+        try {
+          const { data } = await api.post(`/employees/org/${currentOrg.id}/${employee.id}/reset-password`);
+          setResetPasswordData({
+            employee: employee,
+            newPassword: data.newPassword
+          });
+          setShowResetPasswordModal(true);
+          setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        } catch (err) {
+          setError(err.response?.data?.error || 'Failed to reset password');
+          setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        }
+      }
+    });
+  };
+
+  const closeConfirmModal = () => {
+    setConfirmModal(prev => ({ ...prev, isOpen: false }));
   };
 
   const filteredEmployees = employees.filter(emp =>
@@ -204,8 +271,10 @@ export default function EmployeeDirectory() {
                         key={employee.id}
                         employee={employee}
                         isManager={isManager}
+                        isAdmin={isAdmin}
                         onEdit={() => openEditModal(employee)}
-                        onDelete={() => handleDeleteEmployee(employee.id)}
+                        onDelete={() => confirmDeleteEmployee(employee)}
+                        onResetPassword={() => confirmResetPassword(employee)}
                       />
                     ))}
                   </div>
@@ -260,7 +329,7 @@ export default function EmployeeDirectory() {
                               </div>
                             </div>
                             <button
-                              onClick={() => handleDeleteDept(dept.id)}
+                              onClick={() => confirmDeleteDept(dept)}
                               className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
                             >
                               <Icon icon="mdi:delete" className="w-5 h-5" />
@@ -340,6 +409,74 @@ export default function EmployeeDirectory() {
           </div>
         </div>
       )}
+
+      {/* Reset Password Modal */}
+      {showResetPasswordModal && resetPasswordData && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon icon="mdi:lock-check" className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Password Reset!</h3>
+              <p className="text-[var(--color-text-muted)]">
+                New credentials for {resetPasswordData.employee.name}
+              </p>
+            </div>
+
+            <div className="bg-[var(--color-bg-elevated)] rounded-xl p-4 space-y-3 mb-6">
+              <div>
+                <label className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider">Email</label>
+                <p className="font-mono text-sm">{resetPasswordData.employee.email}</p>
+              </div>
+              <div>
+                <label className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider">New Password</label>
+                <div className="flex items-center gap-2">
+                  <p className="font-mono text-lg font-bold text-indigo-400">{resetPasswordData.newPassword}</p>
+                  <button
+                    onClick={() => navigator.clipboard.writeText(resetPasswordData.newPassword)}
+                    className="p-1 text-[var(--color-text-muted)] hover:text-white"
+                    title="Copy password"
+                  >
+                    <Icon icon="mdi:content-copy" className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 mb-6">
+              <div className="flex items-start gap-2">
+                <Icon icon="mdi:alert" className="w-5 h-5 text-yellow-400 shrink-0 mt-0.5" />
+                <p className="text-sm text-yellow-200">
+                  Save this password now! Share it securely with the employee.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                setShowResetPasswordModal(false);
+                setResetPasswordData(null);
+              }}
+              className="w-full py-3 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Confirm Modal */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        onClose={closeConfirmModal}
+        onConfirm={confirmModal.onConfirm}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        confirmText={confirmModal.confirmText}
+        variant={confirmModal.variant}
+        loading={confirmModal.loading}
+      />
     </div>
   );
 }

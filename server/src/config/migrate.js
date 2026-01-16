@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS employees (
 
 -- Insert default plugs
 INSERT INTO plugs (name, slug, description, icon) VALUES 
-  ('Employee Directory', 'employee-directory', 'Manage your organization''s employee information', 'users')
+  ('Employee Directory', 'employee-directory', 'Manage your organization''s employee information', 'mdi:account-group')
 ON CONFLICT (slug) DO NOTHING;
 
 -- Migration: Add department_id to org_members if it doesn't exist
