@@ -39,10 +39,30 @@ export default function DatePicker({
   const updatePosition = () => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
-      setPosition({
-        top: rect.bottom + 8,
-        left: Math.min(rect.right - 288, window.innerWidth - 300) // 288 = dropdown width, align right
-      });
+      const dropdownWidth = 288;
+      const dropdownHeight = 340; // approximate height of calendar
+      
+      // Calculate left position - prefer aligning to button left, but constrain to viewport
+      let left = rect.left;
+      if (left + dropdownWidth > window.innerWidth - 16) {
+        left = window.innerWidth - dropdownWidth - 16;
+      }
+      if (left < 16) {
+        left = 16;
+      }
+      
+      // Calculate top position - prefer below button, but flip above if no space
+      let top = rect.bottom + 8;
+      if (top + dropdownHeight > window.innerHeight - 16) {
+        // Not enough space below, try above
+        top = rect.top - dropdownHeight - 8;
+        if (top < 16) {
+          // Not enough space above either, just position at top with some margin
+          top = 16;
+        }
+      }
+      
+      setPosition({ top, left });
     }
   };
 
@@ -107,7 +127,7 @@ export default function DatePicker({
     <div 
       id="date-picker-dropdown"
       className="fixed w-72 bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-xl shadow-2xl shadow-black/50 overflow-hidden animate-scaleIn"
-      style={{ top: position.top, left: position.left, zIndex: 9999 }}
+      style={{ top: position.top, left: position.left, zIndex: 99999 }}
     >
       {/* Header */}
       <div className="flex items-center justify-between p-3 border-b border-[var(--color-border)]">

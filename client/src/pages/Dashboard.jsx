@@ -34,7 +34,8 @@ export default function Dashboard() {
   const getPlugRoute = (slug) => {
     const routes = {
       'employee-directory': '/employees',
-      'attendance-tracker': '/attendance'
+      'attendance-tracker': '/attendance',
+      'payroll-manager': '/payroll'
     };
     return routes[slug] || '/dashboard';
   };

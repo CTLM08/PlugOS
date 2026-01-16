@@ -10,6 +10,7 @@ import PlugManager from './pages/PlugManager';
 import Settings from './pages/Settings';
 import EmployeeDirectory from './plugs/EmployeeDirectory';
 import AttendanceTracker from './plugs/AttendanceTracker';
+import PayrollManager from './plugs/PayrollManager';
 import './index.css';
 
 function PrivateRoute({ children }) {
@@ -98,6 +99,14 @@ function AppRoutes() {
         element={
           <PrivateRoute>
             <AttendanceTracker />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/payroll"
+        element={
+          <PrivateRoute>
+            <PayrollManager />
           </PrivateRoute>
         }
       />
