@@ -113,6 +113,119 @@ router.delete('/org/:orgId/disable/:plugId', authenticate, requireOrg, requireRo
   }
 });
 
+// Get summary data for dashboard plug cards
+router.get('/org/:orgId/summary', authenticate, requireOrg, async (req, res) => {
+  try {
+    const summary = {};
+    
+    // Get enabled plugs for this org
+    const enabledPlugs = await pool.query(`
+      SELECT p.slug FROM plugs p
+      JOIN org_plugs op ON p.id = op.plug_id
+      WHERE op.org_id = $1 AND p.is_active = true
+    `, [req.orgId]);
+    
+    const enabledSlugs = enabledPlugs.rows.map(p => p.slug);
+    
+    // Employee Directory summary
+    if (enabledSlugs.includes('employee-directory')) {
+      const empResult = await pool.query(`
+        SELECT 
+          COUNT(*) as total_employees,
+          COUNT(DISTINCT department) FILTER (WHERE department IS NOT NULL) as total_departments
+        FROM employees WHERE org_id = $1
+      `, [req.orgId]);
+      
+      const deptResult = await pool.query(`
+        SELECT department as name, COUNT(*) as count
+        FROM employees 
+        WHERE org_id = $1 AND department IS NOT NULL
+        GROUP BY department
+        ORDER BY count DESC
+        LIMIT 5
+      `, [req.orgId]);
+      
+      summary['employee-directory'] = {
+        totalEmployees: parseInt(empResult.rows[0]?.total_employees || 0),
+        totalDepartments: parseInt(empResult.rows[0]?.total_departments || 0),
+        departmentDistribution: deptResult.rows.map(d => ({
+          name: d.name,
+          count: parseInt(d.count)
+        }))
+      };
+    }
+    
+    // Attendance Tracker summary
+    if (enabledSlugs.includes('attendance-tracker')) {
+      const today = new Date().toISOString().split('T')[0];
+      
+      // Get today's attendance stats
+      const attendanceResult = await pool.query(`
+        SELECT COUNT(DISTINCT user_id) as present_count
+        FROM attendance_records 
+        WHERE org_id = $1 AND DATE(clock_in) = $2
+      `, [req.orgId, today]);
+      
+      // Get total org members
+      const membersResult = await pool.query(`
+        SELECT COUNT(*) as total FROM org_members WHERE org_id = $1
+      `, [req.orgId]);
+      
+      // Get pending leave requests
+      const leaveResult = await pool.query(`
+        SELECT COUNT(*) as pending FROM leave_requests 
+        WHERE org_id = $1 AND status = 'pending'
+      `, [req.orgId]);
+      
+      const presentCount = parseInt(attendanceResult.rows[0]?.present_count || 0);
+      const totalMembers = parseInt(membersResult.rows[0]?.total || 0);
+      const attendanceRate = totalMembers > 0 ? Math.round((presentCount / totalMembers) * 100) : 0;
+      
+      summary['attendance-tracker'] = {
+        todayPresent: presentCount,
+        totalMembers: totalMembers,
+        attendanceRate: attendanceRate,
+        pendingLeaves: parseInt(leaveResult.rows[0]?.pending || 0)
+      };
+    }
+    
+    // Payroll Manager summary
+    if (enabledSlugs.includes('payroll-manager')) {
+      // Get latest/current payroll period
+      const periodResult = await pool.query(`
+        SELECT 
+          pp.id, pp.name, pp.status, pp.start_date, pp.end_date,
+          (SELECT COUNT(*) FROM payslips ps WHERE ps.period_id = pp.id) as payslip_count,
+          (SELECT COALESCE(SUM(net_pay), 0) FROM payslips ps WHERE ps.period_id = pp.id) as total_payroll
+        FROM payroll_periods pp
+        WHERE pp.org_id = $1
+        ORDER BY pp.start_date DESC
+        LIMIT 1
+      `, [req.orgId]);
+      
+      // Get configured salaries count
+      const salaryResult = await pool.query(`
+        SELECT COUNT(*) as configured FROM employee_salaries WHERE org_id = $1
+      `, [req.orgId]);
+      
+      const period = periodResult.rows[0];
+      
+      summary['payroll-manager'] = {
+        currentPeriod: period?.name || null,
+        periodStatus: period?.status || null,
+        totalPayroll: parseFloat(period?.total_payroll || 0),
+        employeesProcessed: parseInt(period?.payslip_count || 0),
+        salariesConfigured: parseInt(salaryResult.rows[0]?.configured || 0)
+      };
+    }
+    
+    res.json(summary);
+  } catch (error) {
+    console.error('Plugs summary error:', error);
+    res.status(500).json({ error: 'Failed to get plug summaries' });
+  }
+});
+
 // Check if org has a specific plug enabled
 router.get('/org/:orgId/check/:plugSlug', authenticate, requireOrg, async (req, res) => {
   try {

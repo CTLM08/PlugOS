@@ -3,32 +3,35 @@ import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
+import PlugCard from '../components/PlugCards';
 
 export default function Dashboard() {
   const { user, currentOrg, isAdmin } = useAuth();
   const [enabledPlugs, setEnabledPlugs] = useState([]);
+  const [plugSummary, setPlugSummary] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (currentOrg) {
-      fetchEnabledPlugs();
+      fetchData();
     }
   }, [currentOrg]);
 
-  const fetchEnabledPlugs = async () => {
+  const fetchData = async () => {
     try {
-      const { data } = await api.get(`/plugs/org/${currentOrg.id}`);
-      setEnabledPlugs(data);
+      setLoading(true);
+      // Fetch plugs and summary in parallel
+      const [plugsRes, summaryRes] = await Promise.all([
+        api.get(`/plugs/org/${currentOrg.id}`),
+        api.get(`/plugs/org/${currentOrg.id}/summary`)
+      ]);
+      setEnabledPlugs(plugsRes.data);
+      setPlugSummary(summaryRes.data);
     } catch (error) {
-      console.error('Failed to fetch plugs:', error);
+      console.error('Failed to fetch dashboard data:', error);
     } finally {
       setLoading(false);
     }
-  };
-
-  const getPlugIcon = (icon) => {
-    // Use the icon from database directly, or fallback to puzzle icon
-    return icon || 'mdi:puzzle';
   };
 
   const getPlugRoute = (slug) => {
@@ -54,19 +57,14 @@ export default function Dashboard() {
           <Icon icon="mdi:loading" className="w-8 h-8 text-indigo-500 animate-spin" />
         </div>
       ) : enabledPlugs.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-stagger">
           {enabledPlugs.map((plug) => (
-            <Link
+            <PlugCard
               key={plug.id}
-              to={getPlugRoute(plug.slug)}
-              className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-xl p-6 hover:border-indigo-500/50 hover:bg-[var(--color-bg-elevated)] transition-all group"
-            >
-              <div className="w-12 h-12 bg-indigo-500/10 text-indigo-400 rounded-lg flex items-center justify-center mb-4 group-hover:bg-indigo-500/20 transition-colors">
-                <Icon icon={getPlugIcon(plug.icon)} className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">{plug.name}</h3>
-              <p className="text-sm text-[var(--color-text-muted)]">{plug.description}</p>
-            </Link>
+              plug={plug}
+              summary={plugSummary}
+              route={getPlugRoute(plug.slug)}
+            />
           ))}
         </div>
       ) : (

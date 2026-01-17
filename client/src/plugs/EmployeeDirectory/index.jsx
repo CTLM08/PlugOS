@@ -177,7 +177,7 @@ export default function EmployeeDirectory() {
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-4">
               <Link to="/dashboard" className="text-xl font-bold">
-                Plug<span className="text-indigo-500">OS</span>
+                Plug<span className="text-cyan-500">OS</span>
               </Link>
               <span className="text-[var(--color-text-muted)]">/ Employee Directory</span>
             </div>
@@ -209,7 +209,7 @@ export default function EmployeeDirectory() {
             onClick={() => setActiveTab('employees')}
             className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
               activeTab === 'employees'
-                ? 'border-indigo-500 text-white'
+                ? 'border-cyan-500 text-white'
                 : 'border-transparent text-[var(--color-text-muted)] hover:text-white'
             }`}
           >
@@ -221,7 +221,7 @@ export default function EmployeeDirectory() {
               onClick={() => setActiveTab('departments')}
               className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === 'departments'
-                  ? 'border-indigo-500 text-white'
+                  ? 'border-cyan-500 text-white'
                   : 'border-transparent text-[var(--color-text-muted)] hover:text-white'
               }`}
             >
@@ -233,7 +233,7 @@ export default function EmployeeDirectory() {
 
         {loading ? (
           <div className="flex justify-center py-12">
-            <Icon icon="mdi:loading" className="w-8 h-8 text-indigo-500 animate-spin" />
+            <Icon icon="mdi:loading" className="w-8 h-8 text-cyan-500 animate-spin" />
           </div>
         ) : (
           <>
@@ -255,7 +255,7 @@ export default function EmployeeDirectory() {
                   {isManager && (
                     <button
                       onClick={openAddModal}
-                      className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                      className="inline-flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                     >
                       <Icon icon="mdi:plus" className="w-5 h-5" />
                       Add Employee
@@ -300,7 +300,7 @@ export default function EmployeeDirectory() {
                   </p>
                   <button
                     onClick={() => setShowDeptModal(true)}
-                    className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                    className="inline-flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                   >
                     <Icon icon="mdi:plus" className="w-5 h-5" />
                     Add Department
@@ -318,7 +318,7 @@ export default function EmployeeDirectory() {
                         >
                           <div className="flex items-start justify-between">
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 bg-indigo-500/10 text-indigo-400 rounded-lg flex items-center justify-center">
+                              <div className="w-10 h-10 bg-cyan-500/10 text-cyan-400 rounded-lg flex items-center justify-center">
                                 <Icon icon="mdi:office-building" className="w-5 h-5" />
                               </div>
                               <div>
@@ -400,7 +400,7 @@ export default function EmployeeDirectory() {
                 <button
                   type="submit"
                   disabled={deptLoading}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+                  className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
                 >
                   {deptLoading ? 'Creating...' : 'Create'}
                 </button>
@@ -432,7 +432,7 @@ export default function EmployeeDirectory() {
               <div>
                 <label className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider">New Password</label>
                 <div className="flex items-center gap-2">
-                  <p className="font-mono text-lg font-bold text-indigo-400">{resetPasswordData.newPassword}</p>
+                  <p className="font-mono text-lg font-bold text-cyan-400">{resetPasswordData.newPassword}</p>
                   <button
                     onClick={() => navigator.clipboard.writeText(resetPasswordData.newPassword)}
                     className="p-1 text-[var(--color-text-muted)] hover:text-white"
@@ -458,7 +458,7 @@ export default function EmployeeDirectory() {
                 setShowResetPasswordModal(false);
                 setResetPasswordData(null);
               }}
-              className="w-full py-3 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors"
+              className="w-full py-3 px-4 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-medium transition-colors"
             >
               Done
             </button>
@@ -486,7 +486,7 @@ function EmployeeCard({ employee, isManager, isAdmin, onEdit, onDelete, onResetP
   return (
     <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-xl p-5 hover:border-[var(--color-border)] hover:bg-[var(--color-bg-elevated)] transition-all group">
       <div className="flex items-start gap-4">
-        <div className="w-12 h-12 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center text-lg font-semibold shrink-0">
+        <div className="w-12 h-12 bg-cyan-500/20 text-cyan-400 rounded-full flex items-center justify-center text-lg font-semibold shrink-0">
           {employee.name.charAt(0).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
@@ -562,7 +562,7 @@ function EmptyState({ icon, title, description, showAction, actionLabel, onActio
       {showAction && (
         <button
           onClick={onAction}
-          className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+          className="inline-flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
         >
           <Icon icon="mdi:plus" className="w-5 h-5" />
           {actionLabel}
@@ -645,7 +645,7 @@ function EmployeeModal({ employee, orgId, departments, onClose, onSave }) {
             <div>
               <label className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider">Password</label>
               <div className="flex items-center gap-2">
-                <p className="font-mono text-lg font-bold text-indigo-400">{successData.password}</p>
+                <p className="font-mono text-lg font-bold text-cyan-400">{successData.password}</p>
                 <button
                   onClick={() => navigator.clipboard.writeText(successData.password)}
                   className="p-1 text-[var(--color-text-muted)] hover:text-white"
@@ -670,7 +670,7 @@ function EmployeeModal({ employee, orgId, departments, onClose, onSave }) {
             onClick={() => {
               onSave(successData.employee);
             }}
-            className="w-full py-3 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors"
+            className="w-full py-3 px-4 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-medium transition-colors"
           >
             Done
           </button>
@@ -766,7 +766,7 @@ function EmployeeModal({ employee, orgId, departments, onClose, onSave }) {
                   type="checkbox"
                   checked={formData.createAccount}
                   onChange={(e) => setFormData({ ...formData, createAccount: e.target.checked })}
-                  className="w-5 h-5 rounded border-[var(--color-border)] bg-[var(--color-bg-elevated)] text-indigo-600 focus:ring-indigo-500"
+                  className="w-5 h-5 rounded border-[var(--color-border)] bg-[var(--color-bg-elevated)] text-cyan-600 focus:ring-cyan-500"
                 />
                 <div>
                   <span className="font-medium">Create login account</span>
@@ -790,8 +790,8 @@ function EmployeeModal({ employee, orgId, departments, onClose, onSave }) {
                       <option value="admin">Admin</option>
                     </select>
                   </div>
-                  <div className="bg-indigo-500/10 border border-indigo-500/30 rounded-lg p-3">
-                    <p className="text-sm text-indigo-200">
+                  <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-3">
+                    <p className="text-sm text-cyan-200">
                       A random password will be generated. You'll need to share it with the employee.
                     </p>
                   </div>
@@ -811,7 +811,7 @@ function EmployeeModal({ employee, orgId, departments, onClose, onSave }) {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-3 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-2"
+              className="flex-1 py-3 px-4 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-medium transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-2"
             >
               {loading && <Icon icon="mdi:loading" className="w-5 h-5 animate-spin" />}
               {loading ? 'Saving...' : (employee ? 'Update' : 'Add Employee')}

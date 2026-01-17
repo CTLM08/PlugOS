@@ -261,3 +261,104 @@ button:disabled {
 .animate-slideRight {
   animation: slideInRight 0.3s ease-out;
 }
+
+/* ==================== PLUG CARDS ==================== */
+
+/* Base plug card styles */
+.plug-card {
+  position: relative;
+  display: block;
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(37, 37, 37, 0.7));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.plug-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(99, 102, 241, 0.1);
+}
+
+/* Card glow effects */
+.plug-card-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.plug-card:hover .plug-card-glow {
+  opacity: 1;
+}
+
+.plug-card-glow-cyan {
+  background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.15), transparent 70%);
+}
+
+.plug-card-glow-green {
+  background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15), transparent 70%);
+}
+
+.plug-card-glow-purple {
+  background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.15), transparent 70%);
+}
+
+.plug-card-glow-indigo {
+  background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15), transparent 70%);
+}
+
+/* Card type specific hover shadows */
+.plug-card-employees:hover {
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(6, 182, 212, 0.15);
+}
+
+.plug-card-attendance:hover {
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(16, 185, 129, 0.15);
+}
+
+.plug-card-payroll:hover {
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(139, 92, 246, 0.15);
+}
+
+/* Animated bar chart */
+@keyframes barGrow {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.plug-card .animate-bar {
+  transform-origin: bottom;
+  animation: barGrow 0.6s ease-out forwards;
+}
+
+/* Progress ring animation */
+@keyframes ringFill {
+  from {
+    stroke-dashoffset: 999;
+  }
+}
+
+.plug-card circle {
+  animation: ringFill 1s ease-out;
+}

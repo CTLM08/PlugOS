@@ -226,7 +226,7 @@ export default function PayrollManager() {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <Icon icon="mdi:loading" className="w-8 h-8 text-indigo-500 animate-spin" />
+          <Icon icon="mdi:loading" className="w-8 h-8 text-violet-500 animate-spin" />
         </div>
       ) : (
         <>
@@ -238,7 +238,7 @@ export default function PayrollManager() {
                   {myPayslips.map((payslip) => (
                     <div
                       key={payslip.id}
-                      className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-xl p-5 hover:border-indigo-500/30 transition-colors cursor-pointer"
+                      className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-xl p-5 hover:border-violet-500/30 transition-colors cursor-pointer"
                       onClick={() => setShowPayslipDetail(payslip)}
                     >
                       <div className="flex items-center justify-between">
@@ -287,7 +287,7 @@ export default function PayrollManager() {
                       setEditingSalary(null);
                       setShowSalaryModal(true);
                     }}
-                    className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                    className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                   >
                     <Icon icon="mdi:plus" className="w-5 h-5" />
                     Add Salary
@@ -325,7 +325,7 @@ export default function PayrollManager() {
                                 setEditingSalary(salary);
                                 setShowSalaryModal(true);
                               }}
-                              className="text-indigo-400 hover:text-indigo-300 p-1"
+                              className="text-violet-400 hover:text-violet-300 p-1"
                             >
                               <Icon icon="mdi:pencil" className="w-4 h-4" />
                             </button>
@@ -357,7 +357,7 @@ export default function PayrollManager() {
                   <h3 className="font-semibold">Periods</h3>
                   <button
                     onClick={() => setShowPeriodModal(true)}
-                    className="p-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
+                    className="p-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition-colors"
                   >
                     <Icon icon="mdi:plus" className="w-5 h-5" />
                   </button>
@@ -370,7 +370,7 @@ export default function PayrollManager() {
                       onClick={() => handleSelectPeriod(period)}
                       className={`bg-[var(--color-bg-card)] border rounded-lg p-4 cursor-pointer transition-all ${
                         selectedPeriod?.id === period.id
-                          ? 'border-indigo-500 ring-1 ring-indigo-500/50'
+                          ? 'border-violet-500 ring-1 ring-violet-500/50'
                           : 'border-[var(--color-border)] hover:border-[var(--color-border)]'
                       }`}
                     >
@@ -557,7 +557,7 @@ function TabButton({ active, onClick, icon, label }) {
       onClick={onClick}
       className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-2 ${
         active
-          ? 'border-indigo-500 text-white'
+          ? 'border-violet-500 text-white'
           : 'border-transparent text-[var(--color-text-muted)] hover:text-white'
       }`}
     >
@@ -579,7 +579,7 @@ function EmptyState({ icon, title, description, showAction, actionLabel, onActio
       {showAction && (
         <button
           onClick={onAction}
-          className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+          className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
         >
           <Icon icon="mdi:plus" className="w-5 h-5" />
           {actionLabel}
@@ -687,7 +687,7 @@ function SalaryModal({ orgId, salary, employees, onClose, onSave }) {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-3 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-2"
+              className="flex-1 py-3 px-4 rounded-lg bg-violet-600 hover:bg-violet-700 text-white font-medium transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-2"
             >
               {loading && <Icon icon="mdi:loading" className="w-5 h-5 animate-spin" />}
               {loading ? 'Saving...' : 'Save'}
@@ -782,7 +782,7 @@ function PeriodModal({ orgId, onClose, onSave }) {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-3 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-2"
+              className="flex-1 py-3 px-4 rounded-lg bg-violet-600 hover:bg-violet-700 text-white font-medium transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-2"
             >
               {loading && <Icon icon="mdi:loading" className="w-5 h-5 animate-spin" />}
               {loading ? 'Creating...' : 'Create'}

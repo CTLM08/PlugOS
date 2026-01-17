@@ -248,7 +248,7 @@ export default function AttendanceTracker() {
 
         {loading ? (
           <div className="flex justify-center py-12">
-            <Icon icon="mdi:loading" className="w-8 h-8 text-indigo-500 animate-spin" />
+            <Icon icon="mdi:loading" className="w-8 h-8 text-emerald-500 animate-spin" />
           </div>
         ) : (
           <>
@@ -335,7 +335,7 @@ export default function AttendanceTracker() {
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="font-mono text-indigo-400">
+                          <p className="font-mono text-emerald-400">
                             {formatDuration(record.clock_in, record.clock_out)}
                           </p>
                           {!record.clock_out && (
@@ -385,7 +385,7 @@ export default function AttendanceTracker() {
                     )}
                     <button
                       onClick={() => setShowLeaveModal(true)}
-                      className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                      className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                     >
                       <Icon icon="mdi:plus" className="w-5 h-5" />
                       Request Leave
@@ -431,7 +431,7 @@ export default function AttendanceTracker() {
                               <p className="font-semibold">{request.user_name}</p>
                               <p className="text-sm text-[var(--color-text-muted)]">{request.user_email}</p>
                               <div className="mt-2 flex items-center gap-4 text-sm">
-                                <span className="capitalize bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded">
+                                <span className="capitalize bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded">
                                   {request.leave_type}
                                 </span>
                                 <span>
@@ -510,7 +510,7 @@ export default function AttendanceTracker() {
                         {teamAttendance.map((record) => (
                           <div key={record.id} className="p-4 flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center font-semibold">
+                              <div className="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center font-semibold">
                                 {record.user_name?.charAt(0).toUpperCase()}
                               </div>
                               <div>
@@ -522,7 +522,7 @@ export default function AttendanceTracker() {
                               <p className="text-sm">
                                 {formatTime(record.clock_in)} - {formatTime(record.clock_out)}
                               </p>
-                              <p className="text-xs font-mono text-indigo-400">
+                              <p className="text-xs font-mono text-emerald-400">
                                 {formatDuration(record.clock_in, record.clock_out)}
                               </p>
                             </div>
@@ -578,7 +578,7 @@ function TabButton({ active, onClick, icon, label, badge }) {
       onClick={onClick}
       className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-2 ${
         active
-          ? 'border-indigo-500 text-white'
+          ? 'border-emerald-500 text-white'
           : 'border-transparent text-[var(--color-text-muted)] hover:text-white'
       }`}
     >
@@ -606,7 +606,7 @@ function LeaveCard({ request }) {
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="capitalize bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded text-sm">
+            <span className="capitalize bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded text-sm">
               {request.leave_type}
             </span>
             <span className={`capitalize px-2 py-0.5 rounded text-sm ${statusColors[request.status]}`}>
@@ -732,7 +732,7 @@ function LeaveModal({ orgId, leaveTypes, onClose, onSuccess }) {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-3 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-2"
+              className="flex-1 py-3 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-2"
             >
               {loading && <Icon icon="mdi:loading" className="w-5 h-5 animate-spin" />}
               {loading ? 'Submitting...' : 'Submit Request'}
@@ -804,7 +804,7 @@ function LeaveTypeModal({ orgId, leaveTypes, onClose, onUpdate }) {
           <button
             onClick={handleAdd}
             disabled={loading || !newType.trim()}
-            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors disabled:opacity-50"
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors disabled:opacity-50"
           >
             {loading ? <Icon icon="mdi:loading" className="w-5 h-5 animate-spin" /> : <Icon icon="mdi:plus" className="w-5 h-5" />}
           </button>
