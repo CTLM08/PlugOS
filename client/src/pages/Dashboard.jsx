@@ -38,7 +38,8 @@ export default function Dashboard() {
     const routes = {
       'employee-directory': '/employees',
       'attendance-tracker': '/attendance',
-      'payroll-manager': '/payroll'
+      'payroll-manager': '/payroll',
+      'document-manager': '/documents'
     };
     return routes[slug] || '/dashboard';
   };

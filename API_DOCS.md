@@ -1,6 +1,6 @@
 # PlugOS API Documentation
 
-> **Last Updated:** 2026-01-14
+> **Last Updated:** 2026-01-18
 
 This document contains all API endpoints for the PlugOS platform. Updated progressively as new features are added.
 
@@ -13,6 +13,7 @@ This document contains all API endpoints for the PlugOS platform. Updated progre
 - [Employees](#employees)
 - [Departments](#departments)
 - [Attendance](#attendance)
+- [Documents](#documents)
 - [Invites](#invites)
 
 ---
@@ -286,6 +287,83 @@ Approve or reject a leave request.
 ```
 
 ---
+
+## Documents
+
+Base path: `/api/documents`
+
+| Method | Endpoint | Description | Auth Required | Role |
+|--------|----------|-------------|---------------|------|
+| GET | `/org/:orgId` | List documents for org (with optional folder filter) | Yes | Member |
+| POST | `/org/:orgId` | Upload document | Yes | Any |
+| GET | `/:docId/download` | Download document | Yes | Member |
+| DELETE | `/:docId` | Delete document | Yes | Owner/Admin |
+| GET | `/org/:orgId/folders` | List folders | Yes | Member |
+| POST | `/org/:orgId/folders` | Create folder | Yes | Admin/Manager |
+| DELETE | `/folders/:folderId` | Delete folder | Yes | Admin |
+| GET | `/folders/:folderId/permissions` | Get folder permissions | Yes | Admin |
+| POST | `/folders/:folderId/permissions` | Add folder permission | Yes | Admin |
+| DELETE | `/folders/:folderId/permissions/:permId` | Remove folder permission | Yes | Admin |
+
+### POST /org/:orgId
+Upload a document to an organization.
+
+**Request Body:**
+```json
+{
+  "name": "report.pdf",
+  "fileType": "application/pdf",
+  "fileSize": 102400,
+  "content": "base64_encoded_content",
+  "folderId": "uuid" // optional
+}
+```
+
+**Response:** `201 Created`
+```json
+{
+  "id": "uuid",
+  "name": "report.pdf",
+  "file_type": "application/pdf",
+  "file_size": 102400,
+  "folder_id": "uuid",
+  "uploaded_by": "uuid",
+  "created_at": "2026-01-18T00:00:00Z"
+}
+```
+
+### POST /org/:orgId/folders
+Create a new folder.
+
+**Request Body:**
+```json
+{
+  "name": "Engineering Docs",
+  "parentId": "uuid" // optional, for nested folders
+}
+```
+
+### POST /folders/:folderId/permissions
+Add access permission to a folder. When permissions are set, only specified departments/users can access the folder.
+
+**Request Body:**
+```json
+{
+  "departmentId": "uuid"
+}
+```
+
+or
+
+```json
+{
+  "userId": "uuid"
+}
+```
+
+> [!NOTE]
+> If a folder has no permissions set, all organization members can access it.
+> Once any permission is added, access becomes restricted to those with explicit permissions.
 
 ## Invites
 

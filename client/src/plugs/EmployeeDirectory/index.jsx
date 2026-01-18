@@ -4,6 +4,7 @@ import { Icon } from '@iconify/react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
 import ConfirmModal from '../../components/ConfirmModal';
+import CustomSelect from '../../components/CustomSelect';
 
 export default function EmployeeDirectory() {
   const { currentOrg, isManager, isAdmin } = useAuth();
@@ -729,7 +730,7 @@ function EmployeeModal({ employee, orgId, departments, onClose, onSave }) {
 
           <div>
             <label className="block text-sm font-medium mb-2">Department</label>
-            <select
+            <CustomSelect
               value={formData.department}
               onChange={(e) => {
                 const selectedDept = departments.find(d => d.name === e.target.value);
@@ -739,13 +740,9 @@ function EmployeeModal({ employee, orgId, departments, onClose, onSave }) {
                   department_id: selectedDept?.id || ''
                 });
               }}
-              className="w-full"
-            >
-              <option value="">Select department</option>
-              {departments.map(dept => (
-                <option key={dept.id} value={dept.name}>{dept.name}</option>
-              ))}
-            </select>
+              placeholder="Select department"
+              options={[{ value: '', label: 'Select department' }, ...departments.map(dept => ({ value: dept.name, label: dept.name }))]}
+            />
           </div>
 
           <div>
@@ -780,15 +777,15 @@ function EmployeeModal({ employee, orgId, departments, onClose, onSave }) {
                 <div className="mt-4 pl-8 space-y-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Role</label>
-                    <select
+                    <CustomSelect
                       value={formData.role}
                       onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                      className="w-full"
-                    >
-                      <option value="employee">Employee</option>
-                      <option value="manager">Manager</option>
-                      <option value="admin">Admin</option>
-                    </select>
+                      options={[
+                        { value: 'employee', label: 'Employee' },
+                        { value: 'manager', label: 'Manager' },
+                        { value: 'admin', label: 'Admin' }
+                      ]}
+                    />
                   </div>
                   <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-3">
                     <p className="text-sm text-cyan-200">

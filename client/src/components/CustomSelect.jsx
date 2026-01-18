@@ -58,8 +58,8 @@ export default function CustomSelect({
                 onClick={() => handleSelect(option.value)}
                 className={`w-full text-left px-4 py-2 flex items-center gap-3 transition-colors text-sm ${
                   value === option.value
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-[var(--color-text)] hover:bg-[var(--color-bg-elevated)]'
+                    ? 'bg-[#3b82f6] text-white'
+                    : 'text-[var(--color-text)] hover:bg-[#3b82f6] hover:text-white'
                 }`}
                 style={{ animation: `fadeSlideIn 0.2s ease-out ${index * 0.03}s both` }}
               >

@@ -265,6 +265,66 @@ export function PayrollManagerCard({ plug, summary, route }) {
   );
 }
 
+// Document Manager Card - Amber/Orange theme
+export function DocumentManagerCard({ plug, summary, route }) {
+  const data = summary?.['document-manager'] || {};
+
+  const formatFileSize = (bytes) => {
+    if (!bytes) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  };
+
+  return (
+    <Link
+      to={route}
+      className="plug-card plug-card-documents group"
+    >
+      {/* Background glow effect */}
+      <div className="plug-card-glow plug-card-glow-amber" />
+      
+      {/* Header */}
+      <div className="flex items-start justify-between mb-4 relative z-10">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center border border-amber-500/30 group-hover:border-amber-500/50 group-hover:bg-amber-500/30 transition-colors">
+            <Icon icon="mdi:file-document-multiple" className="w-6 h-6 text-amber-400" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-white">{plug.name}</h3>
+            <p className="text-xs text-[var(--color-text-muted)]">Documents</p>
+          </div>
+        </div>
+        <Icon icon="mdi:arrow-top-right" className="w-5 h-5 text-[var(--color-text-muted)] group-hover:text-amber-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-4 mb-4 relative z-10">
+        <div className="bg-[var(--color-bg-dark)]/50 rounded-lg p-3 border border-white/5">
+          <div className="text-2xl font-bold text-white">{data.totalDocuments || 0}</div>
+          <div className="text-xs text-[var(--color-text-muted)]">Documents</div>
+        </div>
+        <div className="bg-[var(--color-bg-dark)]/50 rounded-lg p-3 border border-white/5">
+          <div className="text-2xl font-bold text-white">{data.totalFolders || 0}</div>
+          <div className="text-xs text-[var(--color-text-muted)]">Folders</div>
+        </div>
+      </div>
+
+      {/* Storage Info */}
+      <div className="relative z-10 bg-[var(--color-bg-dark)]/30 rounded-lg p-3 border border-white/5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Icon icon="mdi:database" className="w-4 h-4 text-amber-400" />
+            <span className="text-sm text-[var(--color-text-muted)]">Storage Used</span>
+          </div>
+          <span className="text-sm font-medium text-white">{formatFileSize(data.totalSize)}</span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 // Generic Fallback Card for unknown plugs - Indigo theme
 export function GenericPlugCard({ plug, route }) {
   return (
@@ -301,7 +361,10 @@ export default function PlugCard({ plug, summary, route }) {
       return <AttendanceTrackerCard plug={plug} summary={summary} route={route} />;
     case 'payroll-manager':
       return <PayrollManagerCard plug={plug} summary={summary} route={route} />;
+    case 'document-manager':
+      return <DocumentManagerCard plug={plug} summary={summary} route={route} />;
     default:
       return <GenericPlugCard plug={plug} route={route} />;
   }
 }
+

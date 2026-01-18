@@ -17,6 +17,7 @@ A modular, plug-and-play organization management platform built with React and N
 | **Employee Directory** | Manage employees, departments, and organizational structure |
 | **Attendance Tracker** | Track attendance, clock in/out, and manage leave requests |
 | **Payroll Manager** | Configure salaries, manage payroll periods, and generate payslips |
+| **Document Manager** | Upload, organize, and share documents with folder permissions |
 
 ## Tech Stack
 
@@ -99,7 +100,8 @@ PlugOS/
 │   │   ├── plugs/          # Plug-specific components
 │   │   │   ├── EmployeeDirectory/
 │   │   │   ├── AttendanceTracker/
-│   │   │   └── PayrollManager/
+│   │   │   ├── PayrollManager/
+│   │   │   └── DocumentManager/
 │   │   └── utils/          # Utility functions
 │   └── package.json
 ├── server/                 # Express backend

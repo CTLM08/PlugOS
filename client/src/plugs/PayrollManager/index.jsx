@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
 import ConfirmModal from '../../components/ConfirmModal';
 import DatePicker from '../../components/DatePicker';
+import CustomSelect from '../../components/CustomSelect';
 
 export default function PayrollManager() {
   const { currentOrg, isAdmin } = useAuth();
@@ -639,17 +640,12 @@ function SalaryModal({ orgId, salary, employees, onClose, onSave }) {
           {!salary && (
             <div>
               <label className="block text-sm font-medium mb-2">Employee</label>
-              <select
+              <CustomSelect
                 value={formData.user_id}
                 onChange={(e) => setFormData({ ...formData, user_id: e.target.value })}
-                required
-                className="w-full"
-              >
-                <option value="">Select employee</option>
-                {employees.map((emp) => (
-                  <option key={emp.id} value={emp.id}>{emp.name} ({emp.email})</option>
-                ))}
-              </select>
+                placeholder="Select employee"
+                options={[{ value: '', label: 'Select employee' }, ...employees.map((emp) => ({ value: emp.id, label: `${emp.name} (${emp.email})` }))]}
+              />
             </div>
           )}
 

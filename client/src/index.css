@@ -61,14 +61,14 @@ body,
   background: #3a3a3a;
 }
 
-/* Focus styles */
+/* Focus styles - remove all outlines */
 *:focus {
-  outline: none;
+  outline: none !important;
 }
 
 *:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Input base styles */
@@ -81,14 +81,16 @@ select {
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;
   width: 100%;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s;
+  outline: none !important;
 }
 
 input:focus,
 textarea:focus,
 select:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 input::placeholder,
@@ -99,6 +101,8 @@ textarea::placeholder {
 /* Custom select styling */
 select {
   appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23a0a0a0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
@@ -108,15 +112,15 @@ select {
 }
 
 select option {
-  background-color: var(--color-bg-card);
-  color: var(--color-text);
+  background-color: #1a1a2e;
+  color: #e0e0e0;
   padding: 0.75rem;
 }
 
 select option:hover,
 select option:focus,
 select option:checked {
-  background-color: var(--color-primary);
+  background-color: #6366f1;
   color: white;
 }
 
@@ -334,6 +338,16 @@ button:disabled {
   box-shadow:
     0 20px 40px -15px rgba(0, 0, 0, 0.5),
     0 0 30px rgba(139, 92, 246, 0.15);
+}
+
+.plug-card-glow-amber {
+  background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.15), transparent 70%);
+}
+
+.plug-card-documents:hover {
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(245, 158, 11, 0.15);
 }
 
 /* Animated bar chart */

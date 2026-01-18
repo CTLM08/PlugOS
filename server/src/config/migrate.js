@@ -99,6 +99,55 @@ INSERT INTO plugs (name, slug, description, icon) VALUES
   ('Employee Directory', 'employee-directory', 'Manage your organization''s employee information', 'mdi:account-group')
 ON CONFLICT (slug) DO NOTHING;
 
+-- Document folders table (for Document Manager plug)
+CREATE TABLE IF NOT EXISTS document_folders (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  org_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
+  name VARCHAR(255) NOT NULL,
+  parent_id UUID REFERENCES document_folders(id) ON DELETE CASCADE,
+  created_by UUID REFERENCES users(id),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Documents table (for Document Manager plug)
+CREATE TABLE IF NOT EXISTS documents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  org_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
+  folder_id UUID REFERENCES document_folders(id) ON DELETE SET NULL,
+  name VARCHAR(255) NOT NULL,
+  file_type VARCHAR(100),
+  file_size INTEGER,
+  uploaded_by UUID REFERENCES users(id),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Document content table (separated for performance)
+CREATE TABLE IF NOT EXISTS document_content (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  document_id UUID UNIQUE REFERENCES documents(id) ON DELETE CASCADE,
+  content TEXT NOT NULL
+);
+
+-- Insert Document Manager plug
+INSERT INTO plugs (name, slug, description, icon) VALUES 
+  ('Document Manager', 'document-manager', 'Upload, organize, and share documents with your team', 'mdi:file-document-multiple')
+ON CONFLICT (slug) DO NOTHING;
+
+-- Folder permissions table (for Document Manager plug)
+CREATE TABLE IF NOT EXISTS folder_permissions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  folder_id UUID NOT NULL REFERENCES document_folders(id) ON DELETE CASCADE,
+  department_id UUID REFERENCES departments(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  -- Either department_id OR user_id should be set, not both
+  CONSTRAINT check_permission_target CHECK (
+    (department_id IS NOT NULL AND user_id IS NULL) OR 
+    (department_id IS NULL AND user_id IS NOT NULL)
+  )
+);
+
 -- Migration: Add department_id to org_members if it doesn't exist
 DO $$ 
 BEGIN

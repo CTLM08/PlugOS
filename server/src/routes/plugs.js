@@ -219,6 +219,23 @@ router.get('/org/:orgId/summary', authenticate, requireOrg, async (req, res) => 
       };
     }
     
+    // Document Manager summary
+    if (enabledSlugs.includes('document-manager')) {
+      const docResult = await pool.query(`
+        SELECT 
+          COUNT(*) as total_documents,
+          COUNT(DISTINCT folder_id) as total_folders,
+          COALESCE(SUM(file_size), 0) as total_size
+        FROM documents WHERE org_id = $1
+      `, [req.orgId]);
+      
+      summary['document-manager'] = {
+        totalDocuments: parseInt(docResult.rows[0]?.total_documents || 0),
+        totalFolders: parseInt(docResult.rows[0]?.total_folders || 0),
+        totalSize: parseInt(docResult.rows[0]?.total_size || 0)
+      };
+    }
+    
     res.json(summary);
   } catch (error) {
     console.error('Plugs summary error:', error);

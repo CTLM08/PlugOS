@@ -11,6 +11,8 @@ import Settings from './pages/Settings';
 import EmployeeDirectory from './plugs/EmployeeDirectory';
 import AttendanceTracker from './plugs/AttendanceTracker';
 import PayrollManager from './plugs/PayrollManager';
+import DocumentManager from './plugs/DocumentManager';
+import PermissionsOverview from './plugs/DocumentManager/PermissionsOverview';
 import './index.css';
 
 function PrivateRoute({ children }) {
@@ -107,6 +109,22 @@ function AppRoutes() {
         element={
           <PrivateRoute>
             <PayrollManager />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/documents"
+        element={
+          <PrivateRoute>
+            <DocumentManager />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/documents/permissions"
+        element={
+          <PrivateRoute>
+            <PermissionsOverview />
           </PrivateRoute>
         }
       />

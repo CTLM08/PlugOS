@@ -55,7 +55,8 @@ export default function PlugManager() {
     const icons = {
       'employee-directory': 'mdi:account-group',
       'attendance-tracker': 'mdi:clock-check-outline',
-      'payroll-manager': 'mdi:cash-multiple'
+      'payroll-manager': 'mdi:cash-multiple',
+      'document-manager': 'mdi:file-document-multiple'
     };
     return icons[plug.slug] || 'mdi:puzzle';
   };
