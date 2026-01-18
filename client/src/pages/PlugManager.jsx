@@ -51,12 +51,13 @@ export default function PlugManager() {
     }
   };
 
-  const getPlugIcon = (icon) => {
+  const getPlugIcon = (plug) => {
     const icons = {
-      users: 'mdi:account-group',
-      default: 'mdi:puzzle'
+      'employee-directory': 'mdi:account-group',
+      'attendance-tracker': 'mdi:clock-check-outline',
+      'payroll-manager': 'mdi:cash-multiple'
     };
-    return icons[icon] || icons.default;
+    return icons[plug.slug] || 'mdi:puzzle';
   };
 
   return (
@@ -115,7 +116,7 @@ export default function PlugManager() {
                           ? 'bg-indigo-500/20 text-indigo-400'
                           : 'bg-[var(--color-bg-elevated)] text-[var(--color-text-muted)]'
                       }`}>
-                        <Icon icon={getPlugIcon(plug.icon)} className="w-8 h-8" />
+                        <Icon icon={getPlugIcon(plug)} className="w-8 h-8" />
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold mb-1">{plug.name}</h3>
