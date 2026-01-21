@@ -69,7 +69,9 @@ export default function Layout({ children }) {
     const routes = {
       'employee-directory': '/employees',
       'attendance-tracker': '/attendance',
-      'payroll-manager': '/payroll'
+      'payroll-manager': '/payroll',
+      'document-manager': '/documents',
+      'education-manager': '/education'
     };
     return routes[slug] || '/dashboard';
   };

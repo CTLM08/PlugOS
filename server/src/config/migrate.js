@@ -174,6 +174,11 @@ CREATE TABLE IF NOT EXISTS notifications (
 
 CREATE INDEX IF NOT EXISTS idx_notifications_user_org ON notifications(user_id, org_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_unread ON notifications(user_id, org_id, read_at) WHERE read_at IS NULL;
+
+-- Insert Education Manager plug
+INSERT INTO plugs (name, slug, description, icon) VALUES 
+  ('Education Manager', 'education-manager', 'Manage classrooms, students, assignments, and announcements like Google Classroom', 'mdi:school')
+ON CONFLICT (slug) DO NOTHING;
 `;
 
 async function runMigrations() {

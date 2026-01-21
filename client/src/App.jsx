@@ -14,6 +14,7 @@ import AttendanceTracker from './plugs/AttendanceTracker';
 import PayrollManager from './plugs/PayrollManager';
 import DocumentManager from './plugs/DocumentManager';
 import PermissionsOverview from './plugs/DocumentManager/PermissionsOverview';
+import EducationManager from './plugs/EducationManager';
 import './index.css';
 
 function PrivateRoute({ children }) {
@@ -134,6 +135,14 @@ function AppRoutes() {
         element={
           <PrivateRoute>
             <PermissionsOverview />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/education"
+        element={
+          <PrivateRoute>
+            <EducationManager />
           </PrivateRoute>
         }
       />

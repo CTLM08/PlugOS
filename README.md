@@ -24,6 +24,7 @@ PlugOS is a flexible enterprise platform built with React and Node.js where feat
 | **Attendance Tracker** | 📅 | Clock in/out, attendance history, and leave request management |
 | **Payroll Manager** | 💰 | Configure salaries, manage payroll periods, generate payslips |
 | **Document Manager** | 📁 | Upload, organize, and share files with folder-level permissions |
+| **Education Manager** | 🎓 | Classrooms, students, assignments, and announcements |
 
 > Each plug can be independently enabled/disabled per organization through the admin dashboard.
 
@@ -188,16 +189,32 @@ For legacy API documentation, see [API_DOCS.md](./API_DOCS.md).
 
 ---
 
-## 🧩 Plugin SDK (Coming Soon)
+## 🧩 SDK Plugs
 
-PlugOS is designed to support third-party plugins that extend functionality. The Plugin SDK will allow developers to:
+PlugOS includes standalone SDK packages that provide complete functionality out of the box:
 
-- 📦 Create custom plugs with their own routes, UI, and database tables
-- 🔌 Hot-load plugins without server restart
-- ⚙️ Declare permissions and configuration options
-- 🎨 Add menu items and pages to the UI
+### 🎓 Education Manager
 
-*Stay tuned for the Plugin SDK documentation!*
+A Google Classroom-like education system with student management, classrooms, assignments, and announcements.
+
+📖 **[View Education SDK Documentation](./plugs/education/README.md)**
+
+**Features:**
+- 👨‍🎓 Student management with enrollment tracking
+- 🏫 Classrooms with join codes
+- 📝 Assignments with grading and submissions
+- 📢 Announcements with comments
+- 🔌 Ready-to-use API routes and React components
+
+```bash
+# Navigate to the plug
+cd plugs/education
+
+# Run the example
+npm run example
+```
+
+> More SDK plugs coming soon! Check the `plugs/` directory for available packages.
 
 ---
 

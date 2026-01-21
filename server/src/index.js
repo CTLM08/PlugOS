@@ -19,10 +19,14 @@ import attendanceRoutes from './routes/attendance.js';
 import payrollRoutes from './routes/payroll.js';
 import documentRoutes from './routes/documents.js';
 import notificationRoutes from './routes/notifications.js';
+import educationRoutes from './routes/education.js';
 
 // Import Plugin SDK
 import { PluginManager } from './sdk/index.js';
 import { createPluginAdminRoutes } from './routes/pluginAdmin.js';
+
+// Import Education SDK
+import { EduSDK } from 'plugos-plugs-education';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -47,6 +51,7 @@ app.use('/api/attendance', attendanceRoutes);
 app.use('/api/payroll', payrollRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/education', educationRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

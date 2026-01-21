@@ -1,0 +1,59 @@
+{
+    "name": "plugos-plugs-education",
+    "version": "1.0.0",
+    "description": "A JavaScript SDK for building education platforms with Google Classroom-like features. Includes student management, classrooms, assignments, and announcements.",
+    "main": "src/index.js",
+    "type": "module",
+    "exports": {
+        ".": "./src/index.js",
+        "./integration": "./integration/index.js",
+        "./integration/routes": "./integration/routes.js",
+        "./integration/database": "./integration/database.js",
+        "./integration/component": "./integration/EducationManager.jsx"
+    },
+    "scripts": {
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+        "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+        "lint": "eslint src/",
+        "example": "node examples/basic-usage.js"
+    },
+    "keywords": [
+        "education",
+        "classroom",
+        "sdk",
+        "student-management",
+        "learning-management-system",
+        "lms",
+        "school",
+        "assignments",
+        "grading",
+        "plugos"
+    ],
+    "author": "",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "devDependencies": {
+        "jest": "^29.7.0",
+        "eslint": "^8.56.0"
+    },
+    "peerDependencies": {
+        "express": ">=4.0.0"
+    },
+    "peerDependenciesMeta": {
+        "express": {
+            "optional": true
+        }
+    },
+    "engines": {
+        "node": ">=16.0.0"
+    },
+    "files": [
+        "src",
+        "integration",
+        "README.md",
+        "LICENSE"
+    ]
+}

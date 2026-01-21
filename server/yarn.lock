@@ -536,6 +536,10 @@ pgpass@1.0.5:
   dependencies:
     split2 "^4.1.0"
 
+"plugos-plugs-education@file:../plugs/education":
+  version "1.0.0"
+  resolved "file:../plugs/education"
+
 postgres-array@~2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/postgres-array/-/postgres-array-2.0.0.tgz"

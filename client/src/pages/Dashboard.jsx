@@ -39,7 +39,8 @@ export default function Dashboard() {
       'employee-directory': '/employees',
       'attendance-tracker': '/attendance',
       'payroll-manager': '/payroll',
-      'document-manager': '/documents'
+      'document-manager': '/documents',
+      'education-manager': '/education'
     };
     return routes[slug] || '/dashboard';
   };
