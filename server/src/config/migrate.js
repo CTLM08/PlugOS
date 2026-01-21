@@ -156,6 +156,24 @@ BEGIN
     ALTER TABLE org_members ADD COLUMN department_id UUID REFERENCES departments(id) ON DELETE SET NULL;
   END IF;
 END $$;
+
+-- Notifications table
+CREATE TABLE IF NOT EXISTS notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  type VARCHAR(50) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  message TEXT,
+  actor_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  link VARCHAR(255),
+  data JSONB DEFAULT '{}',
+  read_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_notifications_user_org ON notifications(user_id, org_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_unread ON notifications(user_id, org_id, read_at) WHERE read_at IS NULL;
 `;
 
 async function runMigrations() {

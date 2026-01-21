@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import PlugManager from './pages/PlugManager';
 import Settings from './pages/Settings';
+import Notifications from './pages/Notifications';
 import EmployeeDirectory from './plugs/EmployeeDirectory';
 import AttendanceTracker from './plugs/AttendanceTracker';
 import PayrollManager from './plugs/PayrollManager';
@@ -85,6 +86,14 @@ function AppRoutes() {
         element={
           <PrivateRoute>
             <Settings />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/notifications"
+        element={
+          <PrivateRoute>
+            <Notifications />
           </PrivateRoute>
         }
       />

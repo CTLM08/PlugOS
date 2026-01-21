@@ -1,44 +1,57 @@
-# PlugOS
+# 🔌 PlugOS
 
-A modular, plug-and-play organization management platform built with React and Node.js. PlugOS provides a flexible architecture where features ("plugs") can be enabled or disabled per organization.
+> A modular, plug-and-play organization management platform
 
-## Features
+PlugOS is a flexible enterprise platform built with React and Node.js where features ("plugs") can be enabled or disabled per organization. It provides a solid foundation for HR, attendance, payroll, and document management—all configurable based on your organization's needs.
 
-### Core Platform
-- **Multi-tenant Architecture** - Support for multiple organizations
-- **Role-based Access Control** - Admin and employee roles with granular permissions
-- **Department Management** - Organize employees into departments with plug-level access control
-- **Secure Authentication** - JWT-based auth with bcrypt password hashing
+---
 
-### Available Plugs
+## ✨ Features
 
-| Plug | Description |
-|------|-------------|
-| **Employee Directory** | Manage employees, departments, and organizational structure |
-| **Attendance Tracker** | Track attendance, clock in/out, and manage leave requests |
-| **Payroll Manager** | Configure salaries, manage payroll periods, and generate payslips |
-| **Document Manager** | Upload, organize, and share documents with folder permissions |
+### 🏢 Core Platform
+| Feature | Description |
+|---------|-------------|
+| **Multi-tenant Architecture** | Supports multiple organizations in a single instance |
+| **Role-based Access Control** | Admin, Manager, and Employee roles with granular permissions |
+| **Department Management** | Organize employees and control plug access by department |
+| **Secure Authentication** | JWT tokens with bcrypt password hashing |
 
-## Tech Stack
+### 🧩 Built-in Plugs
+
+| Plug | Icon | Description |
+|------|------|-------------|
+| **Employee Directory** | 👥 | Manage employees, departments, and organizational structure |
+| **Attendance Tracker** | 📅 | Clock in/out, attendance history, and leave request management |
+| **Payroll Manager** | 💰 | Configure salaries, manage payroll periods, generate payslips |
+| **Document Manager** | 📁 | Upload, organize, and share files with folder-level permissions |
+
+> Each plug can be independently enabled/disabled per organization through the admin dashboard.
+
+---
+
+## 🛠️ Tech Stack
 
 ### Frontend
-- **React 18** with Vite
-- **React Router** for navigation
-- **TailwindCSS** for styling
-- **Iconify** for icons
-- **Axios** for API calls
+- ⚛️ **React 18** with Vite for blazing-fast development
+- 🧭 **React Router** for client-side navigation
+- 🎨 **TailwindCSS** for utility-first styling
+- 🖼️ **Iconify** for beautiful, consistent icons
+- 🌐 **Axios** for API communication
 
 ### Backend
-- **Express.js** REST API
-- **PostgreSQL** database
-- **JWT** authentication
-- **bcrypt** password hashing
+- 🚀 **Express.js** REST API
+- 🐘 **PostgreSQL** database
+- 🔐 **JWT** authentication
+- 🔒 **bcrypt** password hashing
 
-## Getting Started
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v18+)
-- PostgreSQL database
+
+- [Node.js](https://nodejs.org/) v18 or later
+- [PostgreSQL](https://www.postgresql.org/) database
 
 ### Installation
 
@@ -48,7 +61,7 @@ A modular, plug-and-play organization management platform built with React and N
    cd PlugOS
    ```
 
-2. **Set up the server**
+2. **Set up the backend**
    ```bash
    cd server
    npm install
@@ -60,15 +73,17 @@ A modular, plug-and-play organization management platform built with React and N
    ```env
    PORT=5000
    DATABASE_URL=postgresql://username:password@localhost:5432/plugos
-   JWT_SECRET=your-secret-key
+   JWT_SECRET=your-super-secret-key-here
    ```
 
-4. **Run database migrations**
+4. **Create the database & run migrations**
    ```bash
+   # Create the database in PostgreSQL first
+   # Then run migrations:
    npm run db:migrate
    ```
 
-5. **Set up the client**
+5. **Set up the frontend**
    ```bash
    cd ../client
    npm install
@@ -76,54 +91,154 @@ A modular, plug-and-play organization management platform built with React and N
 
 ### Running the Application
 
-1. **Start the server** (from `/server` directory)
-   ```bash
-   npm run dev
-   ```
+**Start both servers** (in separate terminals):
 
-2. **Start the client** (from `/client` directory)
-   ```bash
-   npm run dev
-   ```
+```bash
+# Terminal 1 - Backend (from /server)
+npm run dev
 
-3. Open `http://localhost:5173` in your browser
+# Terminal 2 - Frontend (from /client)
+npm run dev
+```
 
-## Project Structure
+🌐 Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+---
+
+## 📁 Project Structure
 
 ```
 PlugOS/
-├── client/                 # React frontend
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── context/        # React context providers
-│   │   ├── pages/          # Page components
-│   │   ├── plugs/          # Plug-specific components
+├── 📂 client/                  # React frontend
+│   ├── 📂 src/
+│   │   ├── 📂 components/      # Reusable UI components
+│   │   │   ├── Layout.jsx      # Main app layout with sidebar
+│   │   │   ├── ConfirmModal.jsx
+│   │   │   └── ...
+│   │   ├── 📂 context/         # React context providers
+│   │   │   └── AuthContext.jsx # Authentication state
+│   │   ├── 📂 pages/           # Route page components
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Login.jsx
+│   │   │   └── ...
+│   │   ├── 📂 plugs/           # Plug-specific components
 │   │   │   ├── EmployeeDirectory/
 │   │   │   ├── AttendanceTracker/
 │   │   │   ├── PayrollManager/
 │   │   │   └── DocumentManager/
-│   │   └── utils/          # Utility functions
+│   │   └── 📂 utils/           # Utility functions
 │   └── package.json
-├── server/                 # Express backend
-│   ├── src/
-│   │   ├── config/         # Database configuration
-│   │   ├── middleware/     # Express middleware
-│   │   └── routes/         # API route handlers
+│
+├── 📂 server/                  # Express backend
+│   ├── 📂 src/
+│   │   ├── 📂 config/          # Database & migration config
+│   │   │   ├── db.js           # PostgreSQL connection pool
+│   │   │   └── migrate.js      # Database migrations
+│   │   ├── 📂 middleware/      # Express middleware
+│   │   │   └── auth.js         # JWT & role-based auth
+│   │   ├── 📂 routes/          # API route handlers
+│   │   │   ├── auth.js         # Login, register, password
+│   │   │   ├── employees.js    # Employee CRUD
+│   │   │   ├── attendance.js   # Clock in/out, leaves
+│   │   │   ├── payroll.js      # Salaries, payslips
+│   │   │   ├── documents.js    # File management
+│   │   │   └── plugs.js        # Plug enable/disable
+│   │   └── 📂 schema/          # SQL schema files
 │   └── package.json
-└── API_DOCS.md            # API documentation
+│
+├── API_DOCS.md                 # Complete API documentation
+└── README.md                   # You are here!
 ```
 
-## API Documentation
+---
 
-See [API_DOCS.md](./API_DOCS.md) for detailed API documentation.
+## 🔑 Default Roles & Permissions
 
-## Security
+| Role | Dashboard | View Employees | Manage Employees | Approve Leaves | Manage Payroll |
+|------|-----------|----------------|------------------|----------------|----------------|
+| **Admin** | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Manager** | ✅ | ✅ | ❌ | ✅ | ❌ |
+| **Employee** | ✅ | ✅ (limited) | ❌ | ❌ | ❌ |
 
-- Passwords are hashed using bcrypt
-- JWT tokens for session management
-- Role-based access control
-- Department-level plug access restrictions
+---
 
-## License
+## 📖 Documentation
 
-This project is private and proprietary.
+Comprehensive documentation is available in the [`docs/`](./docs/) folder:
+
+| Guide | Description |
+|-------|-------------|
+| [Getting Started](./docs/getting-started.md) | Installation and setup |
+| [Architecture](./docs/architecture.md) | System design overview |
+| [Plugin Development](./docs/plugin-development.md) | Create your own plugs |
+| [API Reference](./docs/api-reference.md) | REST API endpoints |
+| [Contributing](./docs/contributing.md) | How to contribute |
+
+For legacy API documentation, see [API_DOCS.md](./API_DOCS.md).
+
+---
+
+## 🔒 Security Features
+
+- 🔐 **Password Hashing** - bcrypt with salt rounds
+- 🎫 **JWT Tokens** - Secure session management
+- 👮 **Role-based Access** - Admin/Manager/Employee permissions
+- 🏢 **Organization Isolation** - Complete data separation between tenants
+- 📁 **Department-level Control** - Restrict plug access by department
+
+---
+
+## 🧩 Plugin SDK (Coming Soon)
+
+PlugOS is designed to support third-party plugins that extend functionality. The Plugin SDK will allow developers to:
+
+- 📦 Create custom plugs with their own routes, UI, and database tables
+- 🔌 Hot-load plugins without server restart
+- ⚙️ Declare permissions and configuration options
+- 🎨 Add menu items and pages to the UI
+
+*Stay tuned for the Plugin SDK documentation!*
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! The main ways to contribute are:
+
+### 🧩 Creating New Plugs
+The best way to contribute is by creating new plugs that extend PlugOS functionality. Ideas include:
+- 📊 **Analytics Dashboard** - Organization insights and reports
+- 💬 **Team Chat** - Internal messaging system
+- 📋 **Task Manager** - Project and task tracking
+- 🎓 **Training Portal** - Employee onboarding and courses
+- 📝 **Performance Reviews** - Employee evaluation system
+
+### 🔧 Core Improvements
+- Bug fixes and performance optimizations
+- UI/UX enhancements
+- Documentation improvements
+- Security patches
+
+### How to Contribute
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-plug`)
+3. Develop your plug or improvement
+4. Test thoroughly with the existing system
+5. Commit your changes (`git commit -m 'Add amazing plug'`)
+6. Push to the branch (`git push origin feature/amazing-plug`)
+7. Open a Pull Request with a clear description
+
+> 💡 **Tip**: Check the Plugin SDK documentation (coming soon) for guidelines on creating plugs that integrate seamlessly with PlugOS.
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.
+
+---
+
+<p align="center">
+  Made with ❤️ for modern organizations
+</p>

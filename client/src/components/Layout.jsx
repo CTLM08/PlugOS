@@ -1,20 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
 import PasswordChangeModal from './PasswordChangeModal';
+import notificationService from '../utils/notifications';
 
 export default function Layout({ children }) {
   const { user, currentOrg, logout, isAdmin } = useAuth();
   const [enabledPlugs, setEnabledPlugs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
+  const prevUnreadRef = useRef(0);
   const location = useLocation();
 
   useEffect(() => {
     if (currentOrg) {
       fetchEnabledPlugs();
+      fetchUnreadCount();
+      // Request notification permission on first load
+      notificationService.requestPermission();
+      // Poll for new notifications every 30 seconds
+      const interval = setInterval(fetchUnreadCount, 30000);
+      return () => clearInterval(interval);
     }
   }, [currentOrg]);
 
@@ -26,6 +35,28 @@ export default function Layout({ children }) {
       console.error('Failed to fetch plugs:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchUnreadCount = async () => {
+    try {
+      const { data } = await api.get(`/notifications/org/${currentOrg.id}/unread-count`);
+      const newCount = data.count;
+      
+      // Show browser notification if new notifications arrived
+      if (newCount > prevUnreadRef.current && prevUnreadRef.current >= 0) {
+        const newNotifs = newCount - prevUnreadRef.current;
+        notificationService.show('New Notification', {
+          body: `You have ${newNotifs} new notification${newNotifs > 1 ? 's' : ''}`,
+          link: '/notifications',
+          tag: 'plugos-notification', // Prevents duplicate notifications
+        });
+      }
+      
+      prevUnreadRef.current = newCount;
+      setUnreadNotifications(newCount);
+    } catch (error) {
+      console.error('Failed to fetch unread count:', error);
     }
   };
 
@@ -140,6 +171,36 @@ export default function Layout({ children }) {
               <p className="text-xs text-[var(--color-text-muted)] mt-2 whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">No plugs enabled</p>
             </div>
           )}
+        </div>
+
+        {/* Notifications Link */}
+        <div className="p-2 border-t border-[var(--color-border)]">
+          <Link
+            to="/notifications"
+            className={`flex items-center gap-3 w-full py-2.5 px-2 rounded-lg text-sm transition-all ${
+              isActiveRoute('/notifications')
+                ? 'bg-indigo-500/20 text-indigo-400'
+                : 'text-[var(--color-text-muted)] hover:text-white hover:bg-[var(--color-bg-elevated)]'
+            }`}
+            title="Notifications"
+          >
+            <div className={`relative w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
+              isActiveRoute('/notifications') ? 'bg-indigo-500/30' : 'bg-[var(--color-bg-elevated)]'
+            }`}>
+              <Icon icon="mdi:bell" className="w-4 h-4" />
+              {unreadNotifications > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-bold bg-red-500 text-white rounded-full px-1 animate-pulse">
+                  {unreadNotifications > 99 ? '99+' : unreadNotifications}
+                </span>
+              )}
+            </div>
+            <span className="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">
+              Notifications
+              {unreadNotifications > 0 && (
+                <span className="ml-2 text-xs text-red-400">({unreadNotifications})</span>
+              )}
+            </span>
+          </Link>
         </div>
 
         {/* Admin Actions */}

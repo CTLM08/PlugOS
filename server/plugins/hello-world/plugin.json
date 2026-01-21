@@ -1,0 +1,27 @@
+{
+    "id": "hello-world",
+    "name": "Hello World",
+    "version": "1.0.0",
+    "description": "A simple example plugin demonstrating the PlugOS SDK",
+    "author": "PlugOS Team",
+    "license": "MIT",
+    "main": "index.js",
+    "icon": "mdi:hand-wave",
+    "permissions": {
+        "hello-world:view": "View Hello World messages"
+    },
+    "menu": {
+        "label": "Hello World",
+        "icon": "mdi:hand-wave",
+        "path": "/hello-world",
+        "order": 200,
+        "requiredPermission": "hello-world:view"
+    },
+    "config": {
+        "greeting": {
+            "type": "string",
+            "label": "Greeting Message",
+            "default": "Hello from PlugOS!"
+        }
+    }
+}

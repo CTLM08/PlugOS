@@ -157,24 +157,49 @@ router.put('/org/:orgId/:employeeId', authenticate, requireOrg, checkPlugEnabled
     const { name, email, phone, department, position, avatar_url } = req.body;
     const { employeeId } = req.params;
     
-    const result = await pool.query(`
-      UPDATE employees 
-      SET name = COALESCE($1, name),
-          email = COALESCE($2, email),
-          phone = COALESCE($3, phone),
-          department = COALESCE($4, department),
-          position = COALESCE($5, position),
-          avatar_url = COALESCE($6, avatar_url)
-      WHERE id = $7 AND org_id = $8
-      RETURNING *
-    `, [name, email, phone, department, position, avatar_url, employeeId, req.orgId]);
-    
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Employee not found' });
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      
+      // Update employee record
+      const result = await client.query(`
+        UPDATE employees 
+        SET name = COALESCE($1, name),
+            email = COALESCE($2, email),
+            phone = COALESCE($3, phone),
+            department = COALESCE($4, department),
+            position = COALESCE($5, position),
+            avatar_url = COALESCE($6, avatar_url)
+        WHERE id = $7 AND org_id = $8
+        RETURNING *
+      `, [name, email, phone, department, position, avatar_url, employeeId, req.orgId]);
+      
+      if (result.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return res.status(404).json({ error: 'Employee not found' });
+      }
+      
+      const updatedEmployee = result.rows[0];
+      
+      // If name was updated, also update the linked user account (if exists)
+      if (name && updatedEmployee.email) {
+        await client.query(`
+          UPDATE users 
+          SET name = $1 
+          WHERE LOWER(email) = LOWER($2)
+        `, [name, updatedEmployee.email]);
+      }
+      
+      await client.query('COMMIT');
+      res.json(updatedEmployee);
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
     }
-    
-    res.json(result.rows[0]);
   } catch (error) {
+    console.error('Update employee error:', error);
     res.status(500).json({ error: 'Failed to update employee' });
   }
 });

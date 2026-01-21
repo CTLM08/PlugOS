@@ -201,7 +201,26 @@ router.post('/org/:orgId/leave', authenticate, requireOrg, checkPlugEnabled, asy
       RETURNING *
     `, [req.orgId, req.user.id, leave_type, start_date, end_date, reason || null]);
     
-    res.status(201).json(result.rows[0]);
+    const leaveRequest = result.rows[0];
+    
+    // Notify all admins and managers about the new leave request
+    try {
+      const { notifyAdmins } = await import('./notifications.js');
+      await notifyAdmins({
+        orgId: req.orgId,
+        type: 'leave_request',
+        title: 'New Leave Request',
+        message: `${req.user.name} has submitted a ${leave_type} leave request from ${start_date} to ${end_date}`,
+        actorId: req.user.id,
+        link: '/attendance',
+        data: { leaveRequestId: leaveRequest.id, leaveType: leave_type }
+      });
+    } catch (notifyError) {
+      console.error('Failed to send notifications:', notifyError);
+      // Don't fail the request if notifications fail
+    }
+    
+    res.status(201).json(leaveRequest);
   } catch (error) {
     console.error('Leave request error:', error);
     res.status(500).json({ error: 'Failed to submit leave request' });
