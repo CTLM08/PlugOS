@@ -266,6 +266,122 @@ button:disabled {
   animation: slideInRight 0.3s ease-out;
 }
 
+/* ==================== MODAL ANIMATIONS ==================== */
+
+/* Modal overlay fade in */
+@keyframes modalOverlayIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal slide up animation */
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Modal scale in animation */
+@keyframes modalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Modal bounce in animation */
+@keyframes modalBounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  70% {
+    transform: scale(0.95);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Modal content stagger */
+@keyframes modalContentFade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Utility classes for modals */
+.animate-modal-overlay {
+  animation: modalOverlayIn 0.2s ease-out forwards;
+}
+
+.animate-modal-slide-up {
+  animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-modal-scale {
+  animation: modalScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-modal-bounce {
+  animation: modalBounceIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+/* Modal content with staggered children */
+.animate-modal-content>* {
+  animation: modalContentFade 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-modal-content>*:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.animate-modal-content>*:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.animate-modal-content>*:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.animate-modal-content>*:nth-child(4) {
+  animation-delay: 0.25s;
+}
+
+.animate-modal-content>*:nth-child(5) {
+  animation-delay: 0.3s;
+}
+
 /* ==================== PLUG CARDS ==================== */
 
 /* Base plug card styles */

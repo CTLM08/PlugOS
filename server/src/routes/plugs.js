@@ -23,7 +23,7 @@ router.get('/org/:orgId', authenticate, requireOrg, async (req, res) => {
     if (req.orgRole === 'admin') {
       // Admins see all enabled plugs
       const result = await pool.query(`
-        SELECT p.id, p.name, p.slug, p.description, p.icon, op.settings, op.enabled_at
+        SELECT p.id, p.name, p.slug, p.description, p.icon, op.settings, op.enabled_at, op.category_id
         FROM plugs p
         JOIN org_plugs op ON p.id = op.plug_id
         WHERE op.org_id = $1 AND p.is_active = true
@@ -43,7 +43,7 @@ router.get('/org/:orgId', authenticate, requireOrg, async (req, res) => {
     if (!departmentId) {
       // User has no department - show all enabled org plugs (lenient policy)
       const result = await pool.query(`
-        SELECT p.id, p.name, p.slug, p.description, p.icon, op.settings, op.enabled_at
+        SELECT p.id, p.name, p.slug, p.description, p.icon, op.settings, op.enabled_at, op.category_id
         FROM plugs p
         JOIN org_plugs op ON p.id = op.plug_id
         WHERE op.org_id = $1 AND p.is_active = true
@@ -54,7 +54,7 @@ router.get('/org/:orgId', authenticate, requireOrg, async (req, res) => {
     
     // Get plugs assigned to user's department
     const result = await pool.query(`
-      SELECT p.id, p.name, p.slug, p.description, p.icon, op.settings, op.enabled_at
+      SELECT p.id, p.name, p.slug, p.description, p.icon, op.settings, op.enabled_at, op.category_id
       FROM plugs p
       JOIN org_plugs op ON p.id = op.plug_id
       JOIN department_plugs dp ON p.id = dp.plug_id

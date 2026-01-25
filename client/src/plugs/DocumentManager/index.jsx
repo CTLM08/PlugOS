@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
 import ConfirmModal from '../../components/ConfirmModal';
 import CustomSelect from '../../components/CustomSelect';
+import useBodyScrollLock from '../../hooks/useBodyScrollLock';
 
 export default function DocumentManager() {
   const { currentOrg, isAdmin, user } = useAuth();
@@ -493,6 +494,7 @@ function ContextMenu({ x, y, type, item, isManager, canDelete, onUpload, onCreat
 }
 
 function UploadModal({ onClose, onUpload }) {
+  useBodyScrollLock();
   const [dragActive, setDragActive] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -510,8 +512,8 @@ function UploadModal({ onClose, onUpload }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl w-full max-w-md p-6">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl w-full max-w-md p-6 animate-modal-slide-up shadow-2xl">
         <div className="flex justify-between mb-6">
           <h3 className="text-lg font-semibold">Upload Document</h3>
           <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-white"><Icon icon="mdi:close" className="w-6 h-6" /></button>
@@ -537,12 +539,13 @@ function UploadModal({ onClose, onUpload }) {
 }
 
 function FolderModal({ onClose, onCreate }) {
+  useBodyScrollLock();
   const [name, setName] = useState('');
   const handleSubmit = (e) => { e.preventDefault(); if (name.trim()) onCreate(name.trim()); };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl w-full max-w-sm p-6">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl w-full max-w-sm p-6 animate-modal-slide-up shadow-2xl">
         <div className="flex justify-between mb-6">
           <h3 className="text-lg font-semibold">New Folder</h3>
           <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-white"><Icon icon="mdi:close" className="w-6 h-6" /></button>
@@ -560,6 +563,7 @@ function FolderModal({ onClose, onCreate }) {
 }
 
 function FolderPermissionsModal({ folder, orgId, onClose }) {
+  useBodyScrollLock();
   const [permissions, setPermissions] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [employees, setEmployees] = useState([]);
@@ -597,8 +601,8 @@ function FolderPermissionsModal({ folder, orgId, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl w-full max-w-lg p-6">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl w-full max-w-lg p-6 animate-modal-slide-up shadow-2xl">
         <div className="flex justify-between mb-6">
           <div>
             <h3 className="text-lg font-semibold">Folder Permissions</h3>

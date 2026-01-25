@@ -5,6 +5,7 @@ import api from '../../utils/api';
 import ConfirmModal from '../../components/ConfirmModal';
 import DatePicker from '../../components/DatePicker';
 import CustomSelect from '../../components/CustomSelect';
+import useBodyScrollLock from '../../hooks/useBodyScrollLock';
 
 export default function PayrollManager() {
   const { currentOrg, isAdmin } = useAuth();
@@ -592,6 +593,7 @@ function EmptyState({ icon, title, description, showAction, actionLabel, onActio
 
 // Salary Modal
 function SalaryModal({ orgId, salary, employees, onClose, onSave }) {
+  useBodyScrollLock();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
@@ -621,8 +623,8 @@ function SalaryModal({ orgId, salary, employees, onClose, onSave }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-modal-slide-up shadow-2xl">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold">{salary ? 'Edit Salary' : 'Add Salary'}</h3>
           <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-white">
@@ -697,6 +699,7 @@ function SalaryModal({ orgId, salary, employees, onClose, onSave }) {
 
 // Period Modal
 function PeriodModal({ orgId, onClose, onSave }) {
+  useBodyScrollLock();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
@@ -721,8 +724,8 @@ function PeriodModal({ orgId, onClose, onSave }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[100]">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md overflow-visible">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[100] animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md overflow-visible animate-modal-slide-up shadow-2xl">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold">Create Payroll Period</h3>
           <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-white">
@@ -792,9 +795,10 @@ function PeriodModal({ orgId, onClose, onSave }) {
 
 // Payslip Detail Modal
 function PayslipDetailModal({ payslip, onClose, formatCurrency, formatDate }) {
+  useBodyScrollLock();
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-modal-slide-up shadow-2xl">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold">Payslip Details</h3>
           <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-white">

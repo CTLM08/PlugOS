@@ -20,6 +20,7 @@ import payrollRoutes from './routes/payroll.js';
 import documentRoutes from './routes/documents.js';
 import notificationRoutes from './routes/notifications.js';
 import educationRoutes from './routes/education.js';
+import categoryRoutes from './routes/categories.js';
 
 // Import Plugin SDK
 import { PluginManager } from './sdk/index.js';
@@ -52,6 +53,7 @@ app.use('/api/payroll', payrollRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/education', educationRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

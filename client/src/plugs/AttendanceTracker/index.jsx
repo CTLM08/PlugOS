@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
 import CustomSelect from '../../components/CustomSelect';
 import DatePicker from '../../components/DatePicker';
+import useBodyScrollLock from '../../hooks/useBodyScrollLock';
 
 export default function AttendanceTracker() {
   const { currentOrg, isManager, isAdmin, user } = useAuth();
@@ -634,6 +635,7 @@ function LeaveCard({ request }) {
 
 // Leave Modal Component
 function LeaveModal({ orgId, leaveTypes, onClose, onSuccess }) {
+  useBodyScrollLock();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
@@ -665,8 +667,8 @@ function LeaveModal({ orgId, leaveTypes, onClose, onSuccess }) {
   }));
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fadeIn">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-scaleIn">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-modal-slide-up shadow-2xl">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold">Request Leave</h3>
           <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-white">
@@ -746,6 +748,7 @@ function LeaveModal({ orgId, leaveTypes, onClose, onSuccess }) {
 
 // Leave Type Management Modal (Admin only)
 function LeaveTypeModal({ orgId, leaveTypes, onClose, onUpdate }) {
+  useBodyScrollLock();
   const [loading, setLoading] = useState(false);
   const [newType, setNewType] = useState('');
   const [newColor, setNewColor] = useState('#6366f1');
@@ -777,8 +780,8 @@ function LeaveTypeModal({ orgId, leaveTypes, onClose, onUpdate }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fadeIn">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-scaleIn">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-modal-slide-up shadow-2xl">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold">Manage Leave Types</h3>
           <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-white">

@@ -6,16 +6,20 @@ import api from '../utils/api';
 import PlugCard from '../components/PlugCards';
 
 export default function Dashboard() {
-  const { user, currentOrg, isAdmin } = useAuth();
+  const { user, currentOrg, isAdmin, loading: authLoading } = useAuth();
   const [enabledPlugs, setEnabledPlugs] = useState([]);
   const [plugSummary, setPlugSummary] = useState({});
   const [loading, setLoading] = useState(true);
+  const [dataFetched, setDataFetched] = useState(false);
 
   useEffect(() => {
     if (currentOrg) {
       fetchData();
+    } else if (!authLoading) {
+      // Auth is done loading but no org - stop loading state
+      setLoading(false);
     }
-  }, [currentOrg]);
+  }, [currentOrg, authLoading]);
 
   const fetchData = async () => {
     try {
@@ -54,7 +58,7 @@ export default function Dashboard() {
         </p>
       </div>
 
-      {loading ? (
+      {(loading || authLoading) ? (
         <div className="flex justify-center py-12">
           <Icon icon="mdi:loading" className="w-8 h-8 text-indigo-500 animate-spin" />
         </div>

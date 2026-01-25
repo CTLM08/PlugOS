@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import api from '../utils/api';
+import useBodyScrollLock from '../hooks/useBodyScrollLock';
 
 export default function PasswordChangeModal({ onClose }) {
+  useBodyScrollLock();
+
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -45,8 +48,8 @@ export default function PasswordChangeModal({ onClose }) {
 
   if (success) {
     return (
-      <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-        <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl w-full max-w-md p-6 animate-scaleIn text-center">
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-modal-overlay">
+        <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl w-full max-w-md p-6 animate-modal-bounce text-center shadow-2xl">
           <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <Icon icon="mdi:check" className="w-8 h-8 text-green-400" />
           </div>
@@ -66,8 +69,8 @@ export default function PasswordChangeModal({ onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl w-full max-w-md animate-scaleIn">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl w-full max-w-md animate-modal-slide-up shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-[var(--color-border)]">
           <div className="flex items-center gap-3">

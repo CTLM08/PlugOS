@@ -179,6 +179,27 @@ CREATE INDEX IF NOT EXISTS idx_notifications_unread ON notifications(user_id, or
 INSERT INTO plugs (name, slug, description, icon) VALUES 
   ('Education Manager', 'education-manager', 'Manage classrooms, students, assignments, and announcements like Google Classroom', 'mdi:school')
 ON CONFLICT (slug) DO NOTHING;
+
+-- Plug categories table (for organizing plugs in sidebar)
+CREATE TABLE IF NOT EXISTS plug_categories (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  org_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
+  name VARCHAR(100) NOT NULL,
+  icon VARCHAR(50) DEFAULT 'mdi:folder',
+  color VARCHAR(7) DEFAULT '#6366f1',
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(org_id, name)
+);
+
+-- Add category_id to org_plugs if it doesn't exist
+DO $$ 
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                 WHERE table_name = 'org_plugs' AND column_name = 'category_id') THEN
+    ALTER TABLE org_plugs ADD COLUMN category_id UUID REFERENCES plug_categories(id) ON DELETE SET NULL;
+  END IF;
+END $$;
 `;
 
 async function runMigrations() {

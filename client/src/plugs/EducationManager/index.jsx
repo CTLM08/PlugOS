@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
+import useBodyScrollLock from '../../hooks/useBodyScrollLock';
 
 export default function EducationManager() {
   const { currentOrg, isManager, isAdmin } = useAuth();
@@ -580,6 +581,7 @@ function TabButton({ active, onClick, icon, label }) {
 
 // Modal Components
 function ClassroomModal({ onClose, onCreate }) {
+  useBodyScrollLock();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({ name: '', description: '', subject: '' });
@@ -598,8 +600,8 @@ function ClassroomModal({ onClose, onCreate }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fadeIn">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-scaleIn">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-modal-slide-up shadow-2xl">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold">Create Classroom</h3>
           <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-white">
@@ -658,6 +660,7 @@ function ClassroomModal({ onClose, onCreate }) {
 }
 
 function StudentModal({ onClose, onCreate }) {
+  useBodyScrollLock();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({ name: '', email: '' });
@@ -676,8 +679,8 @@ function StudentModal({ onClose, onCreate }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fadeIn">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-scaleIn">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-modal-slide-up shadow-2xl">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold">Add Student</h3>
           <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-white">
@@ -727,6 +730,7 @@ function StudentModal({ onClose, onCreate }) {
 }
 
 function AssignmentModal({ onClose, onCreate }) {
+  useBodyScrollLock();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({ title: '', description: '', points: 100, dueDate: '' });
@@ -745,8 +749,8 @@ function AssignmentModal({ onClose, onCreate }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fadeIn">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-scaleIn">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-modal-slide-up shadow-2xl">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold">Create Assignment</h3>
           <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-white">
@@ -816,6 +820,7 @@ function AssignmentModal({ onClose, onCreate }) {
 }
 
 function AnnouncementModal({ onClose, onCreate }) {
+  useBodyScrollLock();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({ title: '', content: '' });
@@ -834,8 +839,8 @@ function AnnouncementModal({ onClose, onCreate }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fadeIn">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-scaleIn">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-modal-slide-up shadow-2xl">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold">Post Announcement</h3>
           <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-white">
@@ -884,12 +889,13 @@ function AnnouncementModal({ onClose, onCreate }) {
 }
 
 function EnrollModal({ students, enrolledIds, onClose, onEnroll }) {
+  useBodyScrollLock();
   const [selectedStudent, setSelectedStudent] = useState('');
   const availableStudents = students.filter(s => !enrolledIds.includes(s.id));
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fadeIn">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-scaleIn">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-modal-slide-up shadow-2xl">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold">Enroll Student</h3>
           <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-white">

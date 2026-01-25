@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
 import ConfirmModal from '../../components/ConfirmModal';
 import CustomSelect from '../../components/CustomSelect';
+import useBodyScrollLock from '../../hooks/useBodyScrollLock';
 
 export default function EmployeeDirectory() {
   const { currentOrg, isManager, isAdmin } = useAuth();
@@ -376,8 +377,8 @@ export default function EmployeeDirectory() {
 
       {/* Add Department Modal */}
       {showDeptModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-modal-overlay">
+          <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-modal-slide-up shadow-2xl">
             <h3 className="text-lg font-bold mb-4">Add Department</h3>
             <form onSubmit={handleCreateDept}>
               <div className="mb-4">
@@ -413,8 +414,8 @@ export default function EmployeeDirectory() {
 
       {/* Reset Password Modal */}
       {showResetPasswordModal && resetPasswordData && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-modal-overlay">
+          <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-modal-bounce shadow-2xl">
             <div className="text-center mb-6">
               <div className="w-16 h-16 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Icon icon="mdi:lock-check" className="w-8 h-8" />
@@ -575,6 +576,7 @@ function EmptyState({ icon, title, description, showAction, actionLabel, onActio
 
 // Employee Modal Component
 function EmployeeModal({ employee, orgId, departments, onClose, onSave }) {
+  useBodyScrollLock();
   const { isAdmin } = useAuth();
   const [formData, setFormData] = useState({
     name: employee?.name || '',
@@ -626,8 +628,8 @@ function EmployeeModal({ employee, orgId, departments, onClose, onSave }) {
   // Password Display Modal
   if (successData) {
     return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-        <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md">
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-modal-overlay">
+        <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-modal-bounce shadow-2xl">
           <div className="text-center mb-6">
             <div className="w-16 h-16 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mx-auto mb-4">
               <Icon icon="mdi:check" className="w-8 h-8" />
@@ -681,8 +683,8 @@ function EmployeeModal({ employee, orgId, departments, onClose, onSave }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto animate-modal-slide-up shadow-2xl">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold">
             {employee ? 'Edit Employee' : 'Add Employee'}

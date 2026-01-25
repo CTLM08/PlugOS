@@ -1,4 +1,5 @@
 import { Icon } from '@iconify/react';
+import useBodyScrollLock from '../hooks/useBodyScrollLock';
 
 export default function ConfirmModal({ 
   isOpen, 
@@ -11,6 +12,8 @@ export default function ConfirmModal({
   variant = 'danger', // 'danger' | 'warning' | 'info'
   loading = false
 }) {
+  useBodyScrollLock(isOpen);
+
   if (!isOpen) return null;
 
   const variants = {
@@ -37,8 +40,8 @@ export default function ConfirmModal({
   const style = variants[variant] || variants.danger;
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl w-full max-w-md animate-scaleIn">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-modal-overlay">
+      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl w-full max-w-md animate-modal-slide-up shadow-2xl">
         <div className="p-6">
           {/* Icon */}
           <div className={`w-14 h-14 ${style.iconBg} rounded-full flex items-center justify-center mx-auto mb-4`}>
