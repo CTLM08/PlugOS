@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
+import { useDragContext } from './DraggableGrid';
 
 // Mini bar chart for department distribution
 function MiniBarChart({ data, maxBars = 4 }) {
@@ -95,18 +96,26 @@ function StatusBadge({ status }) {
 
 // Employee Directory Card - Cyan/Blue theme
 export function EmployeeDirectoryCard({ plug, summary, route }) {
+  const navigate = useNavigate();
+  const { isDragging } = useDragContext();
   const data = summary?.['employee-directory'] || {};
 
+  const handleClick = (e) => {
+    // Don't navigate if dragging or clicking on drag handle
+    if (isDragging || e.target.closest('.drag-handle')) return;
+    navigate(route);
+  };
+
   return (
-    <Link
-      to={route}
-      className="plug-card plug-card-employees group"
+    <div
+      onClick={handleClick}
+      className="plug-card plug-card-employees group h-full cursor-pointer"
     >
       {/* Background glow effect */}
       <div className="plug-card-glow plug-card-glow-cyan" />
       
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4 relative z-10">
+      {/* Header - Drag Handle */}
+      <div className="drag-handle flex items-start justify-between mb-4 relative z-10 cursor-grab active:cursor-grabbing">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-500/30 group-hover:border-cyan-500/50 group-hover:bg-cyan-500/30 transition-colors">
             <Icon icon="mdi:account-group" className="w-6 h-6 text-cyan-400" />
@@ -136,24 +145,31 @@ export function EmployeeDirectoryCard({ plug, summary, route }) {
         <div className="text-xs text-[var(--color-text-muted)] mb-2">Distribution</div>
         <MiniBarChart data={data.departmentDistribution} />
       </div>
-    </Link>
+    </div>
   );
 }
 
 // Attendance Tracker Card - Green/Emerald theme
 export function AttendanceTrackerCard({ plug, summary, route }) {
+  const navigate = useNavigate();
+  const { isDragging } = useDragContext();
   const data = summary?.['attendance-tracker'] || {};
 
+  const handleClick = (e) => {
+    if (isDragging || e.target.closest('.drag-handle')) return;
+    navigate(route);
+  };
+
   return (
-    <Link
-      to={route}
-      className="plug-card plug-card-attendance group"
+    <div
+      onClick={handleClick}
+      className="plug-card plug-card-attendance group h-full cursor-pointer"
     >
       {/* Background glow effect */}
       <div className="plug-card-glow plug-card-glow-green" />
       
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4 relative z-10">
+      {/* Header - Drag Handle */}
+      <div className="drag-handle flex items-start justify-between mb-4 relative z-10 cursor-grab active:cursor-grabbing">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 flex items-center justify-center border border-emerald-500/30 group-hover:border-emerald-500/50 group-hover:bg-emerald-500/30 transition-colors">
             <Icon icon="mdi:clock-check-outline" className="w-6 h-6 text-emerald-400" />
@@ -197,12 +213,14 @@ export function AttendanceTrackerCard({ plug, summary, route }) {
           )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
 // Payroll Manager Card - Purple/Violet theme
 export function PayrollManagerCard({ plug, summary, route }) {
+  const navigate = useNavigate();
+  const { isDragging } = useDragContext();
   const data = summary?.['payroll-manager'] || {};
 
   const formatCurrency = (amount) => {
@@ -214,16 +232,21 @@ export function PayrollManagerCard({ plug, summary, route }) {
     }).format(amount || 0);
   };
 
+  const handleClick = (e) => {
+    if (isDragging || e.target.closest('.drag-handle')) return;
+    navigate(route);
+  };
+
   return (
-    <Link
-      to={route}
-      className="plug-card plug-card-payroll group"
+    <div
+      onClick={handleClick}
+      className="plug-card plug-card-payroll group h-full cursor-pointer"
     >
       {/* Background glow effect */}
       <div className="plug-card-glow plug-card-glow-purple" />
       
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4 relative z-10">
+      {/* Header - Drag Handle */}
+      <div className="drag-handle flex items-start justify-between mb-4 relative z-10 cursor-grab active:cursor-grabbing">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center border border-violet-500/30 group-hover:border-violet-500/50 group-hover:bg-violet-500/30 transition-colors">
             <Icon icon="mdi:cash-multiple" className="w-6 h-6 text-violet-400" />
@@ -261,12 +284,14 @@ export function PayrollManagerCard({ plug, summary, route }) {
           <div className="text-xs text-[var(--color-text-muted)]">Processed</div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
 // Document Manager Card - Amber/Orange theme
 export function DocumentManagerCard({ plug, summary, route }) {
+  const navigate = useNavigate();
+  const { isDragging } = useDragContext();
   const data = summary?.['document-manager'] || {};
 
   const formatFileSize = (bytes) => {
@@ -277,16 +302,21 @@ export function DocumentManagerCard({ plug, summary, route }) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   };
 
+  const handleClick = (e) => {
+    if (isDragging || e.target.closest('.drag-handle')) return;
+    navigate(route);
+  };
+
   return (
-    <Link
-      to={route}
-      className="plug-card plug-card-documents group"
+    <div
+      onClick={handleClick}
+      className="plug-card plug-card-documents group h-full cursor-pointer"
     >
       {/* Background glow effect */}
       <div className="plug-card-glow plug-card-glow-amber" />
       
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4 relative z-10">
+      {/* Header - Drag Handle */}
+      <div className="drag-handle flex items-start justify-between mb-4 relative z-10 cursor-grab active:cursor-grabbing">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center border border-amber-500/30 group-hover:border-amber-500/50 group-hover:bg-amber-500/30 transition-colors">
             <Icon icon="mdi:file-document-multiple" className="w-6 h-6 text-amber-400" />
@@ -321,24 +351,31 @@ export function DocumentManagerCard({ plug, summary, route }) {
           <span className="text-sm font-medium text-white">{formatFileSize(data.totalSize)}</span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
 // Education Manager Card - Indigo/Purple theme
 export function EducationManagerCard({ plug, summary, route }) {
+  const navigate = useNavigate();
+  const { isDragging } = useDragContext();
   const data = summary?.['education-manager'] || {};
 
+  const handleClick = (e) => {
+    if (isDragging || e.target.closest('.drag-handle')) return;
+    navigate(route);
+  };
+
   return (
-    <Link
-      to={route}
-      className="plug-card plug-card-education group"
+    <div
+      onClick={handleClick}
+      className="plug-card plug-card-education group h-full cursor-pointer"
     >
       {/* Background glow effect */}
       <div className="plug-card-glow plug-card-glow-indigo" />
       
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4 relative z-10">
+      {/* Header - Drag Handle */}
+      <div className="drag-handle flex items-start justify-between mb-4 relative z-10 cursor-grab active:cursor-grabbing">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/30 group-hover:border-indigo-500/50 group-hover:bg-indigo-500/30 transition-colors">
             <Icon icon="mdi:school" className="w-6 h-6 text-indigo-400" />
@@ -373,20 +410,28 @@ export function EducationManagerCard({ plug, summary, route }) {
           <span className="text-sm font-medium text-white">{data.totalAssignments || 0}</span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
 // Generic Fallback Card for unknown plugs - Indigo theme
 export function GenericPlugCard({ plug, route }) {
+  const navigate = useNavigate();
+  const { isDragging } = useDragContext();
+
+  const handleClick = (e) => {
+    if (isDragging || e.target.closest('.drag-handle')) return;
+    navigate(route);
+  };
+
   return (
-    <Link
-      to={route}
-      className="plug-card group"
+    <div
+      onClick={handleClick}
+      className="plug-card group h-full cursor-pointer"
     >
       <div className="plug-card-glow plug-card-glow-indigo" />
       
-      <div className="flex items-start justify-between mb-4 relative z-10">
+      <div className="drag-handle flex items-start justify-between mb-4 relative z-10 cursor-grab active:cursor-grabbing">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/30 group-hover:border-indigo-500/50 group-hover:bg-indigo-500/30 transition-colors">
             <Icon icon={plug.icon || 'mdi:puzzle'} className="w-6 h-6 text-indigo-400" />
@@ -400,7 +445,7 @@ export function GenericPlugCard({ plug, route }) {
       </div>
 
       <p className="text-sm text-[var(--color-text-muted)] relative z-10">{plug.description}</p>
-    </Link>
+    </div>
   );
 }
 

@@ -492,3 +492,116 @@ button:disabled {
 .plug-card circle {
   animation: ringFill 1s ease-out;
 }
+
+/* ==================== DRAGGABLE GRID ==================== */
+
+/* Container */
+.draggable-grid-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Grid items */
+.react-grid-item {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.react-grid-item.react-grid-placeholder {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+  border: 2px dashed rgba(99, 102, 241, 0.5);
+  border-radius: 1rem;
+  opacity: 0.8;
+}
+
+.react-grid-item.resizing {
+  z-index: 100;
+  opacity: 0.9;
+}
+
+.react-grid-item.react-draggable-dragging {
+  z-index: 100;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  opacity: 0.95;
+}
+
+/* Grid item wrapper */
+.grid-item {
+  width: 100%;
+  height: 100%;
+}
+
+.grid-item>.plug-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Resize handle */
+.react-grid-item>.react-resizable-handle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  bottom: 4px;
+  right: 4px;
+  cursor: se-resize;
+  z-index: 10;
+}
+
+.react-grid-item>.react-resizable-handle::after {
+  content: "";
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0 0 3px 0;
+  transition: border-color 0.2s ease;
+}
+
+.react-grid-item:hover>.react-resizable-handle::after {
+  border-color: rgba(99, 102, 241, 0.7);
+}
+
+.react-grid-item>.react-resizable-handle:hover::after {
+  border-color: rgba(99, 102, 241, 1);
+}
+
+/* Drag handle styling */
+.drag-handle {
+  position: relative;
+}
+
+.drag-handle::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -8px;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.1) 20%,
+      transparent 20%,
+      transparent 40%,
+      rgba(255, 255, 255, 0.1) 40%,
+      rgba(255, 255, 255, 0.1) 60%,
+      transparent 60%,
+      transparent 80%,
+      rgba(255, 255, 255, 0.1) 80%,
+      rgba(255, 255, 255, 0.1) 100%);
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.plug-card:hover .drag-handle::before {
+  opacity: 1;
+}
+
+/* Card content overflow handling */
+.plug-card {
+  overflow: hidden;
+}

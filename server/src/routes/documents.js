@@ -31,8 +31,41 @@ const checkOrgMember = async (req, res, next) => {
 router.get('/org/:orgId', authenticate, checkOrgMember, async (req, res) => {
   const { orgId } = req.params;
   const { folderId } = req.query;
+  const userId = req.user.id;
 
   try {
+    // If accessing a specific folder and user is an employee, check permissions
+    if (folderId && req.orgRole === 'employee') {
+      // Get user's department
+      const memberResult = await pool.query(
+        'SELECT department_id FROM org_members WHERE user_id = $1 AND org_id = $2',
+        [userId, orgId]
+      );
+      const userDeptId = memberResult.rows[0]?.department_id;
+
+      // Check if folder has permissions set
+      const permResult = await pool.query(
+        'SELECT COUNT(*) as perm_count FROM folder_permissions WHERE folder_id = $1',
+        [folderId]
+      );
+      const hasPermissions = parseInt(permResult.rows[0].perm_count) > 0;
+
+      if (hasPermissions) {
+        // Check if user has access
+        const accessResult = await pool.query(
+          `SELECT 1 FROM folder_permissions 
+           WHERE folder_id = $1 
+             AND (user_id = $2 OR ($3::uuid IS NOT NULL AND department_id = $3))
+           LIMIT 1`,
+          [folderId, userId, userDeptId]
+        );
+
+        if (accessResult.rows.length === 0) {
+          return res.status(403).json({ error: 'You do not have permission to access this folder' });
+        }
+      }
+    }
+
     let query = `
       SELECT d.*, u.name as uploaded_by_name
       FROM documents d
@@ -58,19 +91,53 @@ router.get('/org/:orgId', authenticate, checkOrgMember, async (req, res) => {
   }
 });
 
-// Get all folders for an organization
+// Get all folders for an organization (filtered by permissions)
 router.get('/org/:orgId/folders', authenticate, checkOrgMember, async (req, res) => {
   const { orgId } = req.params;
+  const userId = req.user.id;
 
   try {
+    // If admin or manager, return all folders
+    if (req.orgRole === 'admin' || req.orgRole === 'manager') {
+      const { rows } = await pool.query(
+        `SELECT f.*, u.name as created_by_name,
+          (SELECT COUNT(*) FROM documents WHERE folder_id = f.id) as document_count
+         FROM document_folders f
+         LEFT JOIN users u ON f.created_by = u.id
+         WHERE f.org_id = $1
+         ORDER BY f.name ASC`,
+        [orgId]
+      );
+      return res.json(rows);
+    }
+
+    // For employees, get their department
+    const memberResult = await pool.query(
+      'SELECT department_id FROM org_members WHERE user_id = $1 AND org_id = $2',
+      [userId, orgId]
+    );
+    const userDeptId = memberResult.rows[0]?.department_id;
+
+    // Get folders that have:
+    // 1. No permissions set (accessible to all), OR
+    // 2. User has direct permission, OR
+    // 3. User's department has permission
     const { rows } = await pool.query(
-      `SELECT f.*, u.name as created_by_name,
+      `SELECT DISTINCT f.*, u.name as created_by_name,
         (SELECT COUNT(*) FROM documents WHERE folder_id = f.id) as document_count
        FROM document_folders f
        LEFT JOIN users u ON f.created_by = u.id
        WHERE f.org_id = $1
+         AND (
+           -- No permissions set (folder is open to all)
+           NOT EXISTS (SELECT 1 FROM folder_permissions WHERE folder_id = f.id)
+           -- Or user has direct permission
+           OR EXISTS (SELECT 1 FROM folder_permissions WHERE folder_id = f.id AND user_id = $2)
+           -- Or user's department has permission
+           OR ($3::uuid IS NOT NULL AND EXISTS (SELECT 1 FROM folder_permissions WHERE folder_id = f.id AND department_id = $3))
+         )
        ORDER BY f.name ASC`,
-      [orgId]
+      [orgId, userId, userDeptId]
     );
     res.json(rows);
   } catch (error) {

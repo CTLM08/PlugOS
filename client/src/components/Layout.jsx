@@ -218,14 +218,14 @@ export default function Layout({ children }) {
   return (
     <div className="min-h-screen bg-[var(--color-bg-dark)] flex">
       {/* Left Sidebar Taskbar */}
-      <aside className="group/sidebar w-16 hover:w-64 bg-[var(--color-bg-card)] border-r border-[var(--color-border)] flex flex-col fixed h-full transition-all duration-300 ease-in-out z-20 overflow-hidden">
+      <aside className="w-64 bg-[var(--color-bg-card)] border-r border-[var(--color-border)] flex flex-col fixed h-full z-20 overflow-hidden">
         {/* Logo */}
         <div className="h-16 flex items-center px-4 border-b border-[var(--color-border)]">
           <Link to="/dashboard" className="flex items-center">
             <div className="w-8 h-8 bg-indigo-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
               <Icon icon="mdi:puzzle" className="w-5 h-5 text-indigo-400" />
             </div>
-            <h1 className="text-xl font-bold ml-3 whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">
+            <h1 className="text-xl font-bold ml-3 whitespace-nowrap">
               Plug<span className="text-indigo-500">OS</span>
             </h1>
           </Link>
@@ -238,7 +238,7 @@ export default function Layout({ children }) {
               <div className="w-8 h-8 bg-[var(--color-bg-elevated)] rounded-lg flex items-center justify-center flex-shrink-0">
                 <Icon icon="mdi:office-building" className="w-4 h-4 text-[var(--color-text-muted)]" />
               </div>
-              <div className="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">
+              <div className="whitespace-nowrap">
                 <span className="text-xs uppercase tracking-wider text-[var(--color-text-muted)]">Organization</span>
                 <p className="text-sm font-medium">{currentOrg.name}</p>
               </div>
@@ -262,7 +262,7 @@ export default function Layout({ children }) {
             }`}>
               <Icon icon="mdi:view-dashboard" className="w-4 h-4" />
             </div>
-            <span className="text-sm font-medium whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Dashboard</span>
+            <span className="text-sm font-medium whitespace-nowrap">Dashboard</span>
           </Link>
         </div>
 
@@ -278,7 +278,7 @@ export default function Layout({ children }) {
           }}
         >
           <div className="px-4 mb-3 overflow-hidden">
-            <span className="text-xs uppercase tracking-wider text-[var(--color-text-muted)] whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Enabled Plugs</span>
+            <span className="text-xs uppercase tracking-wider text-[var(--color-text-muted)] whitespace-nowrap">Enabled Plugs</span>
           </div>
           
           {loading ? (
@@ -304,8 +304,8 @@ export default function Layout({ children }) {
                           onDrop={(e) => handleDrop(e, cat.id)}
                           className={`transition-all duration-200 ${isDragOver ? 'bg-indigo-500/10 rounded-lg' : ''}`}
                         >
-                          <div className="flex items-center justify-between px-2 h-0 group-hover/sidebar:h-7 group-hover/sidebar:py-1.5 overflow-hidden group/cat transition-all duration-300 ease-in-out">
-                            <span className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">
+                          <div className="flex items-center justify-between px-2 py-1.5 group/cat">
+                            <span className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider whitespace-nowrap">
                               {cat.name}
                             </span>
                             {isAdmin && (
@@ -344,7 +344,7 @@ export default function Layout({ children }) {
                                     }`}>
                                       <Icon icon={getPlugIcon(plug.icon)} className="w-3.5 h-3.5" />
                                     </div>
-                                    <span className="text-sm whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">{plug.name}</span>
+                                    <span className="text-sm whitespace-nowrap">{plug.name}</span>
                                   </Link>
                                 );
                               })}
@@ -385,12 +385,12 @@ export default function Layout({ children }) {
                                 }`}>
                                   <Icon icon={getPlugIcon(plug.icon)} className="w-4 h-4" />
                                 </div>
-                                <span className="text-sm font-medium whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">{plug.name}</span>
+                                <span className="text-sm font-medium whitespace-nowrap">{plug.name}</span>
                               </Link>
                             );
                           })}
                           {showUncategorizedDropZone && uncategorized.length === 0 && (
-                            <div className="px-2 py-3 text-xs text-center text-[var(--color-text-muted)] opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">
+                            <div className="px-2 py-3 text-xs text-center text-[var(--color-text-muted)]">
                               Drop here to uncategorize
                             </div>
                           )}
@@ -406,7 +406,7 @@ export default function Layout({ children }) {
               <div className="w-8 h-8 bg-[var(--color-bg-elevated)] rounded-lg flex items-center justify-center mx-auto">
                 <Icon icon="mdi:puzzle-outline" className="w-4 h-4 text-[var(--color-text-muted)]" />
               </div>
-              <p className="text-xs text-[var(--color-text-muted)] mt-2 whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">No plugs enabled</p>
+              <p className="text-xs text-[var(--color-text-muted)] mt-2 whitespace-nowrap">No plugs enabled</p>
             </div>
           )}
         </div>
@@ -432,7 +432,7 @@ export default function Layout({ children }) {
                 </span>
               )}
             </div>
-            <span className="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">
+            <span className="whitespace-nowrap">
               Notifications
               {unreadNotifications > 0 && (
                 <span className="ml-2 text-xs text-red-400">({unreadNotifications})</span>
@@ -456,7 +456,7 @@ export default function Layout({ children }) {
               <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
                 <Icon icon="mdi:puzzle-plus" className="w-5 h-5" />
               </div>
-              <span className="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Manage Plugs</span>
+              <span className="whitespace-nowrap">Manage Plugs</span>
             </Link>
             <Link
               to="/settings"
@@ -470,14 +470,14 @@ export default function Layout({ children }) {
               <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
                 <Icon icon="mdi:shield-key" className="w-5 h-5" />
               </div>
-              <span className="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Plug Access</span>
+              <span className="whitespace-nowrap">Plug Access</span>
             </Link>
           </div>
         )}
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 ml-16 transition-all duration-300">
+      <div className="flex-1 ml-64">
         {/* Top Navigation */}
         <nav className="bg-[var(--color-bg-card)] border-b border-[var(--color-border)] sticky top-0 z-10">
           <div className="px-6 lg:px-8">

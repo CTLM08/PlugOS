@@ -14,6 +14,7 @@ PlugOS is a flexible enterprise platform built with React and Node.js where feat
 | **Multi-tenant Architecture** | Supports multiple organizations in a single instance |
 | **Role-based Access Control** | Admin, Manager, and Employee roles with granular permissions |
 | **Department Management** | Organize employees and control plug access by department |
+| **Draggable Dashboard** | Drag cards to reorder and resize by dragging corners |
 | **Secure Authentication** | JWT tokens with bcrypt password hashing |
 
 ### 🧩 Built-in Plugs
@@ -37,6 +38,7 @@ PlugOS is a flexible enterprise platform built with React and Node.js where feat
 - 🧭 **React Router** for client-side navigation
 - 🎨 **TailwindCSS** for utility-first styling
 - 🖼️ **Iconify** for beautiful, consistent icons
+- 📦 **React Grid Layout** for draggable/resizable dashboard
 - 🌐 **Axios** for API communication
 
 ### Backend
@@ -114,6 +116,7 @@ PlugOS/
 │   ├── 📂 src/
 │   │   ├── 📂 components/      # Reusable UI components
 │   │   │   ├── Layout.jsx      # Main app layout with sidebar
+│   │   │   ├── DraggableGrid.jsx # Draggable/resizable grid layout
 │   │   │   ├── ConfirmModal.jsx
 │   │   │   └── ...
 │   │   ├── 📂 context/         # React context providers

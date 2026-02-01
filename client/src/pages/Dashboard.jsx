@@ -4,6 +4,7 @@ import { Icon } from '@iconify/react';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
 import PlugCard from '../components/PlugCards';
+import DraggableGrid from '../components/DraggableGrid';
 
 export default function Dashboard() {
   const { user, currentOrg, isAdmin, loading: authLoading } = useAuth();
@@ -56,6 +57,12 @@ export default function Dashboard() {
         <p className="text-[var(--color-text-muted)]">
           Here's what's available in your workspace
         </p>
+        {enabledPlugs.length > 0 && (
+          <p className="text-xs text-[var(--color-text-muted)] mt-2 flex items-center gap-1">
+            <Icon icon="mdi:cursor-move" className="w-4 h-4" />
+            Drag cards to reorder • Drag corners to resize
+          </p>
+        )}
       </div>
 
       {(loading || authLoading) ? (
@@ -63,16 +70,21 @@ export default function Dashboard() {
           <Icon icon="mdi:loading" className="w-8 h-8 text-indigo-500 animate-spin" />
         </div>
       ) : enabledPlugs.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-stagger">
+        <DraggableGrid 
+          plugs={enabledPlugs} 
+          orgId={currentOrg?.id} 
+          userId={user?.id}
+        >
           {enabledPlugs.map((plug) => (
-            <PlugCard
-              key={plug.id}
-              plug={plug}
-              summary={plugSummary}
-              route={getPlugRoute(plug.slug)}
-            />
+            <div key={plug.id.toString()} className="grid-item">
+              <PlugCard
+                plug={plug}
+                summary={plugSummary}
+                route={getPlugRoute(plug.slug)}
+              />
+            </div>
           ))}
-        </div>
+        </DraggableGrid>
       ) : (
         <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-xl p-12 text-center">
           <div className="w-16 h-16 bg-[var(--color-bg-elevated)] rounded-full flex items-center justify-center mx-auto mb-4">

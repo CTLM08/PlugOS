@@ -193,212 +193,267 @@ export default function DocumentManager() {
   const breadcrumbs = getBreadcrumbs();
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg-dark)]">
-      {/* Navigation */}
-      <nav className="bg-[var(--color-bg-card)] border-b border-[var(--color-border)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-4">
-              <Link to="/dashboard" className="text-xl font-bold">
-                Plug<span className="text-indigo-500">OS</span>
-              </Link>
-              <span className="text-[var(--color-text-muted)]">/ Document Manager</span>
-            </div>
-            <Link to="/dashboard" className="flex items-center gap-2 text-sm text-[var(--color-text-muted)] hover:text-white">
-              <Icon icon="mdi:arrow-left" className="w-4 h-4" />
-              Back to Dashboard
-            </Link>
+    <div>
+      {/* Page Header */}
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20">
+            <Icon icon="mdi:folder-multiple" className="w-7 h-7 text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">Document Manager</h1>
+            <p className="text-sm text-[var(--color-text-muted)]">Organize and manage your organization's files</p>
           </div>
         </div>
-      </nav>
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex gap-6">
-          {/* Sidebar */}
-          <div className="w-64 flex-shrink-0">
-            <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-xl p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-sm">Folders</h3>
-                {isManager && (
-                  <button onClick={() => setShowFolderModal(true)} className="p-1 hover:bg-[var(--color-bg-elevated)] rounded" title="New Folder">
-                    <Icon icon="mdi:folder-plus" className="w-5 h-5 text-amber-400" />
-                  </button>
-                )}
-              </div>
-              <div className="space-y-1">
-                <button
-                  onClick={() => setCurrentFolder(null)}
-                  className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${!currentFolder ? 'bg-amber-500/20 text-amber-400' : 'hover:bg-[var(--color-bg-elevated)] text-[var(--color-text-muted)]'}`}
-                >
-                  <Icon icon="mdi:folder-home" className="w-5 h-5" />
-                  All Documents
+      <div className="flex gap-6">
+        {/* Sidebar */}
+        <div className="w-72 flex-shrink-0">
+          <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-5 sticky top-24">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-base flex items-center gap-2">
+                <Icon icon="mdi:folder-outline" className="w-5 h-5 text-amber-400" />
+                Folders
+              </h3>
+              {isManager && (
+                <button onClick={() => setShowFolderModal(true)} className="p-2 hover:bg-amber-500/10 rounded-lg transition-colors" title="New Folder">
+                  <Icon icon="mdi:folder-plus" className="w-5 h-5 text-amber-400" />
                 </button>
-              </div>
+              )}
+            </div>
+            <div className="space-y-1">
+              <button
+                onClick={() => setCurrentFolder(null)}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${!currentFolder ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/10 text-amber-400 border border-amber-500/30' : 'hover:bg-[var(--color-bg-elevated)] text-[var(--color-text-muted)]'}`}
+              >
+                <Icon icon="mdi:folder-home" className="w-5 h-5" />
+                All Documents
+              </button>
+              
+              {/* Show subfolders in sidebar */}
+              {folders.filter(f => !f.parent_id).map(folder => (
+                <button
+                  key={folder.id}
+                  onClick={() => setCurrentFolder(folder)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${currentFolder?.id === folder.id ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/10 text-amber-400 border border-amber-500/30' : 'hover:bg-[var(--color-bg-elevated)] text-[var(--color-text-muted)]'}`}
+                >
+                  <Icon icon="mdi:folder" className="w-5 h-5" />
+                  {folder.name}
+                </button>
+              ))}
             </div>
           </div>
+        </div>
 
-          {/* Main Content */}
-          <div className="flex-1" onContextMenu={(e) => { if (!e.target.closest('.item-card')) handleContextMenu(e, 'empty'); }}>
+        {/* Main Content */}
+        <div className="flex-1 min-w-0" onContextMenu={(e) => { if (!e.target.closest('.item-card')) handleContextMenu(e, 'empty'); }}>
+          {/* Content Header Card */}
+          <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 mb-6">
             {/* Breadcrumb */}
-            <div className="flex items-center gap-1 text-sm mb-2">
-              <button onClick={() => setCurrentFolder(null)} className="text-[var(--color-text-muted)] hover:text-amber-400">Documents</button>
+            <div className="flex items-center gap-2 text-sm mb-4">
+              <button onClick={() => setCurrentFolder(null)} className="flex items-center gap-1 text-[var(--color-text-muted)] hover:text-amber-400 transition-colors">
+                <Icon icon="mdi:home" className="w-4 h-4" />
+                Home
+              </button>
               {breadcrumbs.map((crumb, i) => (
-                <span key={crumb.id} className="flex items-center gap-1">
+                <span key={crumb.id} className="flex items-center gap-2">
                   <Icon icon="mdi:chevron-right" className="w-4 h-4 text-[var(--color-text-muted)]" />
-                  <button onClick={() => setCurrentFolder(crumb)} className={i === breadcrumbs.length - 1 ? 'text-amber-400 font-medium' : 'text-[var(--color-text-muted)] hover:text-amber-400'}>
+                  <button onClick={() => setCurrentFolder(crumb)} className={`transition-colors ${i === breadcrumbs.length - 1 ? 'text-amber-400 font-medium' : 'text-[var(--color-text-muted)] hover:text-amber-400'}`}>
                     {crumb.name}
                   </button>
                 </span>
               ))}
             </div>
 
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6">
+            {/* Title & Actions */}
+            <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold">{currentFolder ? currentFolder.name : 'All Documents'}</h2>
-                <p className="text-sm text-[var(--color-text-muted)]">{subfolders.length} folders, {filteredDocuments.length} files</p>
+                <h2 className="text-xl font-bold mb-1">{currentFolder ? currentFolder.name : 'All Documents'}</h2>
+                <p className="text-sm text-[var(--color-text-muted)]">
+                  {subfolders.length > 0 && <span>{subfolders.length} folder{subfolders.length !== 1 ? 's' : ''}</span>}
+                  {subfolders.length > 0 && filteredDocuments.length > 0 && <span> • </span>}
+                  {filteredDocuments.length > 0 && <span>{filteredDocuments.length} file{filteredDocuments.length !== 1 ? 's' : ''}</span>}
+                  {subfolders.length === 0 && filteredDocuments.length === 0 && <span>Empty folder</span>}
+                </p>
               </div>
-              <div className="flex items-center gap-3">
+              
+              <div className="flex items-center gap-2 flex-wrap justify-end">
+                {/* Search */}
                 <div className="relative">
-                  <Icon icon="mdi:magnify" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-text-muted)]" />
+                  <Icon icon="mdi:magnify" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-muted)]" />
                   <input
                     type="text"
-                    placeholder="Search..."
+                    placeholder="Search files..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 pr-4 py-2 bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:border-amber-500/50 w-48"
+                    className="pl-9 pr-4 py-2 bg-[var(--color-bg-elevated)] border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:border-amber-500/50 w-44 transition-colors"
                   />
                 </div>
-                <div className="flex bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-1">
-                  <button onClick={() => setViewMode('grid')} className={`p-2 rounded ${viewMode === 'grid' ? 'bg-amber-500/20 text-amber-400' : 'text-[var(--color-text-muted)]'}`}>
-                    <Icon icon="mdi:view-grid" className="w-5 h-5" />
+                
+                {/* View Toggle */}
+                <div className="flex bg-[var(--color-bg-elevated)] rounded-lg p-1">
+                  <button onClick={() => setViewMode('grid')} className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-amber-500/20 text-amber-400' : 'text-[var(--color-text-muted)] hover:text-white'}`}>
+                    <Icon icon="mdi:view-grid" className="w-4 h-4" />
                   </button>
-                  <button onClick={() => setViewMode('list')} className={`p-2 rounded ${viewMode === 'list' ? 'bg-amber-500/20 text-amber-400' : 'text-[var(--color-text-muted)]'}`}>
-                    <Icon icon="mdi:view-list" className="w-5 h-5" />
+                  <button onClick={() => setViewMode('list')} className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-amber-500/20 text-amber-400' : 'text-[var(--color-text-muted)] hover:text-white'}`}>
+                    <Icon icon="mdi:view-list" className="w-4 h-4" />
                   </button>
                 </div>
-                <button onClick={() => setShowUploadModal(true)} className="flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg">
-                  <Icon icon="mdi:upload" className="w-5 h-5" />
+
+                {/* Action Buttons */}
+                <button onClick={() => setShowUploadModal(true)} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-medium rounded-lg shadow-lg shadow-amber-500/20 transition-all">
+                  <Icon icon="mdi:cloud-upload" className="w-4 h-4" />
                   Upload
                 </button>
                 {isManager && (
-                  <button onClick={() => setShowFolderModal(true)} className="flex items-center gap-2 px-4 py-2 border border-amber-600 text-amber-400 hover:bg-amber-600/10 rounded-lg">
-                    <Icon icon="mdi:folder-plus" className="w-5 h-5" />
+                  <button onClick={() => setShowFolderModal(true)} className="flex items-center gap-2 px-4 py-2 bg-[var(--color-bg-elevated)] hover:bg-amber-500/10 text-amber-400 font-medium rounded-lg border border-amber-500/30 transition-all">
+                    <Icon icon="mdi:folder-plus" className="w-4 h-4" />
                     New Folder
                   </button>
                 )}
                 {isManager && (
-                  <Link to="/documents/permissions" className="flex items-center gap-2 px-4 py-2 border border-[var(--color-border)] text-[var(--color-text-muted)] hover:text-white hover:border-white/30 rounded-lg">
-                    <Icon icon="mdi:shield-account" className="w-5 h-5" />
+                  <Link to="/documents/permissions" className="flex items-center gap-2 px-4 py-2 bg-[var(--color-bg-elevated)] hover:bg-[var(--color-bg-dark)] text-[var(--color-text-muted)] hover:text-white font-medium rounded-lg border border-[var(--color-border)] transition-all">
+                    <Icon icon="mdi:shield-account" className="w-4 h-4" />
                     Permissions
                   </Link>
                 )}
               </div>
             </div>
+          </div>
 
-            {/* Content */}
-            {loading ? (
-              <div className="flex justify-center py-12">
-                <Icon icon="mdi:loading" className="w-8 h-8 text-amber-500 animate-spin" />
+          {/* Content */}
+          {loading ? (
+            <div className="flex justify-center py-16">
+              <div className="flex flex-col items-center gap-3">
+                <Icon icon="mdi:loading" className="w-10 h-10 text-amber-500 animate-spin" />
+                <p className="text-sm text-[var(--color-text-muted)]">Loading documents...</p>
               </div>
-            ) : subfolders.length === 0 && filteredDocuments.length === 0 ? (
-              <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-xl p-12 text-center">
-                <Icon icon="mdi:folder-open-outline" className="w-16 h-16 text-[var(--color-text-muted)] mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Empty folder</h3>
-                <p className="text-[var(--color-text-muted)] mb-4">Upload files or create subfolders</p>
+            </div>
+          ) : subfolders.length === 0 && filteredDocuments.length === 0 ? (
+            <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-16 text-center">
+              <div className="w-20 h-20 bg-[var(--color-bg-elevated)] rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Icon icon="mdi:folder-open-outline" className="w-10 h-10 text-[var(--color-text-muted)]" />
               </div>
-            ) : (
-              <div>
-                {/* Subfolders */}
-                {subfolders.length > 0 && (
-                  <div className="mb-6">
-                    <h3 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">Folders</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      {subfolders.map(folder => (
-                        <div
-                          key={folder.id}
-                          className="item-card bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-xl p-4 hover:border-amber-500/30 cursor-pointer"
-                          onClick={() => setCurrentFolder(folder)}
-                          onContextMenu={(e) => handleContextMenu(e, 'folder', folder)}
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-amber-500/20 rounded-lg flex items-center justify-center">
-                              <Icon icon="mdi:folder" className="w-6 h-6 text-amber-400" />
+              <h3 className="text-xl font-semibold mb-2">No files yet</h3>
+              <p className="text-[var(--color-text-muted)] mb-6 max-w-sm mx-auto">Upload documents or create folders to organize your files</p>
+              <div className="flex gap-3 justify-center">
+                <button onClick={() => setShowUploadModal(true)} className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium rounded-lg">
+                  <Icon icon="mdi:cloud-upload" className="w-5 h-5" />
+                  Upload File
+                </button>
+                {isManager && (
+                  <button onClick={() => setShowFolderModal(true)} className="flex items-center gap-2 px-5 py-2.5 bg-[var(--color-bg-elevated)] text-amber-400 font-medium rounded-lg border border-amber-500/30">
+                    <Icon icon="mdi:folder-plus" className="w-5 h-5" />
+                    Create Folder
+                  </button>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Subfolders */}
+              {subfolders.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <Icon icon="mdi:folder-multiple" className="w-4 h-4" />
+                    Folders
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {subfolders.map(folder => (
+                      <div
+                        key={folder.id}
+                        className="item-card bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-xl p-4 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/5 cursor-pointer transition-all group"
+                        onClick={() => setCurrentFolder(folder)}
+                        onContextMenu={(e) => handleContextMenu(e, 'folder', folder)}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 bg-gradient-to-br from-amber-500/20 to-orange-500/10 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                            <Icon icon="mdi:folder" className="w-7 h-7 text-amber-400" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-semibold text-sm truncate group-hover:text-amber-400 transition-colors">{folder.name}</h4>
+                            <p className="text-xs text-[var(--color-text-muted)]">{folder.document_count || 0} files</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Files */}
+              {filteredDocuments.length > 0 && (
+                <div>
+                  {subfolders.length > 0 && (
+                    <h3 className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-4 flex items-center gap-2">
+                      <Icon icon="mdi:file-multiple" className="w-4 h-4" />
+                      Files
+                    </h3>
+                  )}
+                  {viewMode === 'grid' ? (
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {filteredDocuments.map(doc => (
+                        <div key={doc.id} className="item-card group bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-xl p-5 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/5 transition-all" onContextMenu={(e) => handleContextMenu(e, 'document', doc)}>
+                          <div className="flex flex-col items-center text-center">
+                            <div className="w-16 h-16 bg-[var(--color-bg-elevated)] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                              <Icon icon={getFileIcon(doc.file_type)} className={`w-9 h-9 ${getFileIconColor(doc.file_type)}`} />
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <h4 className="font-medium text-sm truncate">{folder.name}</h4>
-                            </div>
+                            <h4 className="font-semibold text-sm truncate w-full mb-1">{doc.name}</h4>
+                            <p className="text-xs text-[var(--color-text-muted)]">{formatFileSize(doc.file_size)}</p>
+                            <p className="text-xs text-[var(--color-text-muted)]">by {doc.uploaded_by_name || 'Unknown'}</p>
+                          </div>
+                          <div className="flex justify-center gap-2 mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onClick={(e) => { e.stopPropagation(); handleDownload(doc); }} className="p-2.5 bg-[var(--color-bg-elevated)] hover:bg-amber-500/20 rounded-lg transition-colors">
+                              <Icon icon="mdi:download" className="w-4 h-4 text-amber-400" />
+                            </button>
+                            {canDeleteDocument(doc) && (
+                              <button onClick={(e) => { e.stopPropagation(); confirmDeleteDocument(doc); }} className="p-2.5 bg-[var(--color-bg-elevated)] hover:bg-red-500/20 rounded-lg transition-colors">
+                                <Icon icon="mdi:trash-can-outline" className="w-4 h-4 text-red-400" />
+                              </button>
+                            )}
                           </div>
                         </div>
                       ))}
                     </div>
-                  </div>
-                )}
-
-                {/* Files */}
-                {filteredDocuments.length > 0 && (
-                  <div>
-                    {subfolders.length > 0 && <h3 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">Files</h3>}
-                    {viewMode === 'grid' ? (
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {filteredDocuments.map(doc => (
-                          <div key={doc.id} className="item-card group bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-xl p-4 hover:border-amber-500/30" onContextMenu={(e) => handleContextMenu(e, 'document', doc)}>
-                            <div className="flex flex-col items-center text-center">
-                              <div className="w-14 h-14 bg-[var(--color-bg-elevated)] rounded-xl flex items-center justify-center mb-3">
-                                <Icon icon={getFileIcon(doc.file_type)} className={`w-8 h-8 ${getFileIconColor(doc.file_type)}`} />
-                              </div>
-                              <h4 className="font-medium text-sm truncate w-full">{doc.name}</h4>
-                              <p className="text-xs text-[var(--color-text-muted)]">{formatFileSize(doc.file_size)}</p>
-                              <p className="text-xs text-[var(--color-text-muted)]">by {doc.uploaded_by_name || 'Unknown'}</p>
-                            </div>
-                            <div className="flex justify-center gap-2 mt-3 opacity-0 group-hover:opacity-100">
-                              <button onClick={() => handleDownload(doc)} className="p-2 bg-[var(--color-bg-elevated)] hover:bg-amber-500/20 rounded-lg">
-                                <Icon icon="mdi:download" className="w-4 h-4 text-amber-400" />
-                              </button>
-                              {canDeleteDocument(doc) && (
-                                <button onClick={() => confirmDeleteDocument(doc)} className="p-2 bg-[var(--color-bg-elevated)] hover:bg-red-500/20 rounded-lg">
-                                  <Icon icon="mdi:trash-can-outline" className="w-4 h-4 text-red-400" />
-                                </button>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-xl overflow-hidden">
-                        <table className="w-full">
-                          <thead>
-                            <tr className="border-b border-[var(--color-border)]">
-                              <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Name</th>
-                              <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Size</th>
-                              <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Uploaded By</th>
-                              <th className="text-right px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Actions</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {filteredDocuments.map(doc => (
-                              <tr key={doc.id} className="border-b border-[var(--color-border)] hover:bg-[var(--color-bg-elevated)]" onContextMenu={(e) => handleContextMenu(e, 'document', doc)}>
-                                <td className="px-4 py-3 flex items-center gap-3">
+                  ) : (
+                    <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl overflow-hidden">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-elevated)]">
+                            <th className="text-left px-5 py-4 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Name</th>
+                            <th className="text-left px-5 py-4 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Size</th>
+                            <th className="text-left px-5 py-4 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Uploaded By</th>
+                            <th className="text-right px-5 py-4 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredDocuments.map(doc => (
+                            <tr key={doc.id} className="border-b border-[var(--color-border)] hover:bg-[var(--color-bg-elevated)] transition-colors" onContextMenu={(e) => handleContextMenu(e, 'document', doc)}>
+                              <td className="px-5 py-4 flex items-center gap-3">
+                                <div className="w-10 h-10 bg-[var(--color-bg-elevated)] rounded-lg flex items-center justify-center">
                                   <Icon icon={getFileIcon(doc.file_type)} className={`w-5 h-5 ${getFileIconColor(doc.file_type)}`} />
-                                  <span>{doc.name}</span>
-                                </td>
-                                <td className="px-4 py-3 text-sm text-[var(--color-text-muted)]">{formatFileSize(doc.file_size)}</td>
-                                <td className="px-4 py-3 text-sm text-[var(--color-text-muted)]">{doc.uploaded_by_name || 'Unknown'}</td>
-                                <td className="px-4 py-3 text-right">
-                                  <button onClick={() => handleDownload(doc)} className="p-2 hover:bg-amber-500/20 rounded-lg"><Icon icon="mdi:download" className="w-4 h-4 text-amber-400" /></button>
-                                  {canDeleteDocument(doc) && <button onClick={() => confirmDeleteDocument(doc)} className="p-2 hover:bg-red-500/20 rounded-lg"><Icon icon="mdi:trash-can-outline" className="w-4 h-4 text-red-400" /></button>}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+                                </div>
+                                <span className="font-medium">{doc.name}</span>
+                              </td>
+                              <td className="px-5 py-4 text-sm text-[var(--color-text-muted)]">{formatFileSize(doc.file_size)}</td>
+                              <td className="px-5 py-4 text-sm text-[var(--color-text-muted)]">{doc.uploaded_by_name || 'Unknown'}</td>
+                              <td className="px-5 py-4 text-right">
+                                <div className="flex justify-end gap-1">
+                                  <button onClick={() => handleDownload(doc)} className="p-2 hover:bg-amber-500/20 rounded-lg transition-colors"><Icon icon="mdi:download" className="w-4 h-4 text-amber-400" /></button>
+                                  {canDeleteDocument(doc) && <button onClick={() => confirmDeleteDocument(doc)} className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"><Icon icon="mdi:trash-can-outline" className="w-4 h-4 text-red-400" /></button>}
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
