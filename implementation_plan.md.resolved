@@ -1,0 +1,120 @@
+# Task Manager Plug Implementation
+
+Add a new **Task Manager** plug to PlugOS for assigning and tracking tasks/projects within an organization.
+
+## Features
+
+- **Create/Edit/Delete Tasks** - Admins and managers can create tasks with title, description, priority, due date, and assignees
+- **Task Assignment** - Assign tasks to specific users or leave unassigned
+- **Priority Levels** - Low, Medium, High, Urgent
+- **Status Tracking** - To Do, In Progress, Review, Completed
+- **Filtering & Search** - Filter by status, priority, assignee; search by title
+- **Dashboard Card** - Shows task count, overdue tasks, and status breakdown
+
+---
+
+## Proposed Changes
+ 
+### Backend - Database Schema
+
+#### [NEW] [tasks.sql](file:///c:/Users/CHUA%20TAN%20LI%20MING/Documents/projects/PlugOS/server/src/schema/tasks.sql)
+
+Creates two tables:
+
+| Table | Purpose |
+|-------|---------|
+| `tasks` | Main task records with title, description, status, priority, due date, assignee |
+| `task_comments` | Optional comments on tasks |
+
+---
+
+### Backend - API Routes
+
+#### [NEW] [tasks.js](file:///c:/Users/CHUA%20TAN%20LI%20MING/Documents/projects/PlugOS/server/src/routes/tasks.js)
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/org/:orgId` | GET | Get all tasks for org (with filters) |
+| `/org/:orgId` | POST | Create new task |
+| `/org/:orgId/:taskId` | GET | Get single task details |
+| `/org/:orgId/:taskId` | PUT | Update task |
+| `/org/:orgId/:taskId` | DELETE | Delete task |
+| `/org/:orgId/:taskId/status` | PUT | Quick status update |
+
+---
+
+### Backend - Server Integration
+
+#### [MODIFY] [index.js](file:///c:/Users/CHUA%20TAN%20LI%20MING/Documents/projects/PlugOS/server/src/index.js)
+
+- Import and register `/api/tasks` routes
+
+#### [MODIFY] [migrate.js](file:///c:/Users/CHUA%20TAN%20LI%20MING/Documents/projects/PlugOS/server/src/config/migrate.js)
+
+- Add Task Manager plug entry to seed data
+
+#### [MODIFY] [plugs.js](file:///c:/Users/CHUA%20TAN%20LI%20MING/Documents/projects/PlugOS/server/src/routes/plugs.js)
+
+- Add Task Manager summary data (task counts, overdue, status breakdown)
+
+---
+
+### Frontend - Task Manager Component
+
+#### [NEW] [index.jsx](file:///c:/Users/CHUA%20TAN%20LI%20MING/Documents/projects/PlugOS/client/src/plugs/TaskManager/index.jsx)
+
+Main plug component with:
+- Tab navigation (My Tasks, All Tasks, Team tab for managers)
+- Task list with filters (status, priority, search)
+- Create/Edit task modal
+- Task cards with status badges and quick actions
+- **Theme: Rose/Pink** (distinct from existing plugs)
+
+---
+
+### Frontend - Dashboard Card
+
+#### [MODIFY] [PlugCards.jsx](file:///c:/Users/CHUA%20TAN%20LI%20MING/Documents/projects/PlugOS/client/src/components/PlugCards.jsx)
+
+Add `TaskManagerCard` component with:
+- Total tasks count
+- Overdue tasks indicator
+- Status breakdown (mini progress bar or pie)
+- Rose/Pink color theme
+
+---
+
+### Frontend - Routing
+
+#### [MODIFY] [App.jsx](file:///c:/Users/CHUA%20TAN%20LI%20MING/Documents/projects/PlugOS/client/src/App.jsx)
+
+- Import TaskManager and add `/tasks` route
+
+---
+
+## Verification Plan
+
+### Manual Testing
+
+1. **Database Migration**
+   - Run `npm run migrate` in server directory
+   - Verify tables `tasks` and `task_comments` are created
+
+2. **Enable Plug**
+   - Log in as admin
+   - Go to Plug Manager (`/plugs`)
+   - Enable "Task Manager" plug
+   - Verify it appears in sidebar and dashboard
+
+3. **Task CRUD**
+   - Create a new task with all fields
+   - Edit the task
+   - Change status using quick action
+   - Delete the task
+
+4. **Dashboard Card**
+   - Verify Task Manager card shows on dashboard
+   - Check that counts update after adding tasks
+
+> [!NOTE]
+> There are no existing automated tests in this project. Manual verification is the standard approach used for other plugs.

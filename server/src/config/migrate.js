@@ -200,6 +200,52 @@ BEGIN
     ALTER TABLE org_plugs ADD COLUMN category_id UUID REFERENCES plug_categories(id) ON DELETE SET NULL;
   END IF;
 END $$;
+
+-- Tasks table
+CREATE TABLE IF NOT EXISTS tasks (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  org_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  status VARCHAR(50) DEFAULT 'To Do',
+  priority VARCHAR(50) DEFAULT 'Medium',
+  due_date TIMESTAMP,
+  assignee_id UUID REFERENCES employees(id) ON DELETE SET NULL,
+  created_by UUID REFERENCES employees(id) ON DELETE SET NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Task comments table
+CREATE TABLE IF NOT EXISTS task_comments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  task_id UUID REFERENCES tasks(id) ON DELETE CASCADE,
+  employee_id UUID REFERENCES employees(id) ON DELETE CASCADE,
+  content TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Task assignees junction table (supports multiple assignees per task)
+CREATE TABLE IF NOT EXISTS task_assignees (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  task_id UUID REFERENCES tasks(id) ON DELETE CASCADE,
+  employee_id UUID REFERENCES employees(id) ON DELETE CASCADE,
+  department_id UUID REFERENCES departments(id) ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT chk_assignee CHECK (
+    (employee_id IS NOT NULL AND department_id IS NULL) OR
+    (employee_id IS NULL AND department_id IS NOT NULL)
+  )
+);
+
+CREATE INDEX IF NOT EXISTS idx_task_assignees_task ON task_assignees(task_id);
+CREATE INDEX IF NOT EXISTS idx_task_assignees_employee ON task_assignees(employee_id);
+CREATE INDEX IF NOT EXISTS idx_task_assignees_department ON task_assignees(department_id);
+
+-- Insert Task Manager plug
+INSERT INTO plugs (name, slug, description, icon) VALUES 
+  ('Task Manager', 'task-manager', 'Assign and track tasks within your organization', 'mdi:clipboard-check-outline')
+ON CONFLICT (slug) DO NOTHING;
 `;
 
 async function runMigrations() {

@@ -10,12 +10,12 @@ export const useDragContext = () => useContext(DragContext);
 
 // Default layout configuration for each plug type with min/max constraints
 const DEFAULT_SIZES = {
-  'employee-directory': { w: 1, h: 2, minW: 1, maxW: 4, minH: 2, maxH: 4 },
-  'attendance-tracker': { w: 1, h: 2, minW: 1, maxW: 4, minH: 2, maxH: 4 },
-  'payroll-manager': { w: 1, h: 2, minW: 1, maxW: 4, minH: 2, maxH: 4 },
-  'document-manager': { w: 1, h: 2, minW: 1, maxW: 4, minH: 2, maxH: 4 },
-  'education-manager': { w: 1, h: 2, minW: 1, maxW: 4, minH: 2, maxH: 4 },
-  'default': { w: 1, h: 2, minW: 1, maxW: 2, minH: 2, maxH: 4 }
+  'employee-directory': { w: 1, h: 2, minW: 1, maxW: 6, minH: 2, maxH: 4 },
+  'attendance-tracker': { w: 1, h: 2, minW: 1, maxW: 6, minH: 2, maxH: 4 },
+  'payroll-manager': { w: 1, h: 2, minW: 1, maxW: 6, minH: 2, maxH: 4 },
+  'document-manager': { w: 1, h: 2, minW: 1, maxW: 6, minH: 2, maxH: 4 },
+  'education-manager': { w: 1, h: 2, minW: 1, maxW: 6, minH: 2, maxH: 4 },
+  'default': { w: 1, h: 2, minW: 1, maxW: 6, minH: 2, maxH: 4 }
 };
 
 export default function DraggableGrid({ 

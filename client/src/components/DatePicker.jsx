@@ -214,7 +214,7 @@ export default function DatePicker({
         ref={buttonRef}
         type="button"
         onClick={handleOpen}
-        className="min-w-[130px] flex items-center justify-between gap-2 bg-[var(--color-bg-elevated)] border border-[var(--color-border)] text-left px-3 py-2 rounded-lg transition-all hover:border-[var(--color-primary)] focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20"
+        className="w-full flex items-center justify-between gap-2 bg-[var(--color-bg-elevated)] border border-[var(--color-border)] text-left px-3 py-2.5 rounded-xl transition-all hover:border-[var(--color-primary)] focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20"
       >
         <div className="flex items-center gap-2">
           <Icon icon="mdi:calendar" className="w-4 h-4 text-indigo-400 shrink-0" />

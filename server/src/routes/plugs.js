@@ -236,6 +236,32 @@ router.get('/org/:orgId/summary', authenticate, requireOrg, async (req, res) => 
       };
     }
     
+    // Task Manager summary
+    if (enabledSlugs.includes('task-manager')) {
+      const taskResult = await pool.query(`
+        SELECT 
+          COUNT(*) as total_tasks,
+          COUNT(*) FILTER (WHERE status != 'Completed' AND due_date < NOW()) as overdue_tasks,
+          COUNT(*) FILTER (WHERE status = 'To Do') as todo_count,
+          COUNT(*) FILTER (WHERE status = 'In Progress') as in_progress_count,
+          COUNT(*) FILTER (WHERE status = 'Review') as review_count,
+          COUNT(*) FILTER (WHERE status = 'Completed') as completed_count
+        FROM tasks WHERE org_id = $1
+      `, [req.orgId]);
+      
+      const stats = taskResult.rows[0];
+      summary['task-manager'] = {
+        totalTasks: parseInt(stats.total_tasks || 0),
+        overdueTasks: parseInt(stats.overdue_tasks || 0),
+        statusBreakdown: {
+          todo: parseInt(stats.todo_count || 0),
+          inProgress: parseInt(stats.in_progress_count || 0),
+          review: parseInt(stats.review_count || 0),
+          completed: parseInt(stats.completed_count || 0)
+        }
+      };
+    }
+    
     res.json(summary);
   } catch (error) {
     console.error('Plugs summary error:', error);

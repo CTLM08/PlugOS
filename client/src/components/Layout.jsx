@@ -208,7 +208,8 @@ export default function Layout({ children }) {
       'attendance-tracker': '/attendance',
       'payroll-manager': '/payroll',
       'document-manager': '/documents',
-      'education-manager': '/education'
+      'education-manager': '/education',
+      'task-manager': '/tasks'
     };
     return routes[slug] || '/dashboard';
   };

@@ -466,6 +466,16 @@ button:disabled {
     0 0 30px rgba(245, 158, 11, 0.15);
 }
 
+.plug-card-glow-rose {
+  background: radial-gradient(circle at 50% 0%, rgba(225, 29, 72, 0.15), transparent 70%);
+}
+
+.plug-card-tasks:hover {
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(225, 29, 72, 0.15);
+}
+
 /* Animated bar chart */
 @keyframes barGrow {
   from {

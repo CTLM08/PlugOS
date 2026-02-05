@@ -21,6 +21,7 @@ import documentRoutes from './routes/documents.js';
 import notificationRoutes from './routes/notifications.js';
 import educationRoutes from './routes/education.js';
 import categoryRoutes from './routes/categories.js';
+import taskRoutes from './routes/tasks.js';
 
 // Import Plugin SDK
 import { PluginManager } from './sdk/index.js';
@@ -54,6 +55,7 @@ app.use('/api/documents', documentRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/education', educationRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/tasks', taskRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

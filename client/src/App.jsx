@@ -15,6 +15,7 @@ import PayrollManager from './plugs/PayrollManager';
 import DocumentManager from './plugs/DocumentManager';
 import PermissionsOverview from './plugs/DocumentManager/PermissionsOverview';
 import EducationManager from './plugs/EducationManager';
+import TaskManager from './plugs/TaskManager';
 import './index.css';
 
 function PrivateRoute({ children }) {
@@ -143,6 +144,14 @@ function AppRoutes() {
         element={
           <PrivateRoute>
             <EducationManager />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/tasks"
+        element={
+          <PrivateRoute>
+            <TaskManager />
           </PrivateRoute>
         }
       />

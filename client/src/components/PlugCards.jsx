@@ -101,8 +101,7 @@ export function EmployeeDirectoryCard({ plug, summary, route }) {
   const data = summary?.['employee-directory'] || {};
 
   const handleClick = (e) => {
-    // Don't navigate if dragging or clicking on drag handle
-    if (isDragging || e.target.closest('.drag-handle')) return;
+    if (isDragging) return;
     navigate(route);
   };
 
@@ -156,7 +155,7 @@ export function AttendanceTrackerCard({ plug, summary, route }) {
   const data = summary?.['attendance-tracker'] || {};
 
   const handleClick = (e) => {
-    if (isDragging || e.target.closest('.drag-handle')) return;
+    if (isDragging) return;
     navigate(route);
   };
 
@@ -233,7 +232,7 @@ export function PayrollManagerCard({ plug, summary, route }) {
   };
 
   const handleClick = (e) => {
-    if (isDragging || e.target.closest('.drag-handle')) return;
+    if (isDragging) return;
     navigate(route);
   };
 
@@ -303,7 +302,7 @@ export function DocumentManagerCard({ plug, summary, route }) {
   };
 
   const handleClick = (e) => {
-    if (isDragging || e.target.closest('.drag-handle')) return;
+    if (isDragging) return;
     navigate(route);
   };
 
@@ -362,7 +361,7 @@ export function EducationManagerCard({ plug, summary, route }) {
   const data = summary?.['education-manager'] || {};
 
   const handleClick = (e) => {
-    if (isDragging || e.target.closest('.drag-handle')) return;
+    if (isDragging) return;
     navigate(route);
   };
 
@@ -420,7 +419,7 @@ export function GenericPlugCard({ plug, route }) {
   const { isDragging } = useDragContext();
 
   const handleClick = (e) => {
-    if (isDragging || e.target.closest('.drag-handle')) return;
+    if (isDragging) return;
     navigate(route);
   };
 
@@ -449,6 +448,87 @@ export function GenericPlugCard({ plug, route }) {
   );
 }
 
+// Task Manager Card - Rose/Pink theme
+export function TaskManagerCard({ plug, summary, route }) {
+  const navigate = useNavigate();
+  const { isDragging } = useDragContext();
+  const data = summary?.['task-manager'] || {};
+  const breakdown = data.statusBreakdown || {};
+
+  const handleClick = (e) => {
+    if (isDragging) return;
+    navigate(route);
+  };
+
+  return (
+    <div
+      onClick={handleClick}
+      className="plug-card plug-card-tasks group h-full cursor-pointer"
+    >
+      {/* Background glow effect */}
+      <div className="plug-card-glow plug-card-glow-rose" />
+      
+      {/* Header - Drag Handle */}
+      <div className="drag-handle flex items-start justify-between mb-4 relative z-10 cursor-grab active:cursor-grabbing">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500/20 to-pink-500/20 flex items-center justify-center border border-rose-500/30 group-hover:border-rose-500/50 group-hover:bg-rose-500/30 transition-colors">
+            <Icon icon="mdi:clipboard-check-outline" className="w-6 h-6 text-rose-400" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-white">{plug.name}</h3>
+            <p className="text-xs text-[var(--color-text-muted)]">Tasks</p>
+          </div>
+        </div>
+        <Icon icon="mdi:arrow-top-right" className="w-5 h-5 text-[var(--color-text-muted)] group-hover:text-rose-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-4 mb-4 relative z-10">
+        <div className="bg-[var(--color-bg-dark)]/50 rounded-lg p-3 border border-white/5">
+          <div className="text-2xl font-bold text-white">{data.totalTasks || 0}</div>
+          <div className="text-xs text-[var(--color-text-muted)]">Total Tasks</div>
+        </div>
+        <div className="bg-[var(--color-bg-dark)]/50 rounded-lg p-3 border border-white/5">
+          <div className="text-2xl font-bold text-red-400">{data.overdueTasks || 0}</div>
+          <div className="text-xs text-[var(--color-text-muted)]">Overdue</div>
+        </div>
+      </div>
+
+      {/* Status Breakdown Mini Bar */}
+      <div className="relative z-10 bg-[var(--color-bg-dark)]/30 rounded-lg p-3 border border-white/5">
+        <div className="flex justify-between text-[10px] text-[var(--color-text-muted)] mb-1.5 font-medium">
+          <span>STATUS PROGRESS</span>
+          <span className="text-white">{breakdown.completed || 0}/{data.totalTasks || 0}</span>
+        </div>
+        <div className="flex h-1.5 w-full bg-[var(--color-bg-elevated)] rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-green-500 transition-all duration-500" 
+            style={{ width: `${(breakdown.completed / data.totalTasks) * 100 || 0}%` }}
+          />
+          <div 
+            className="h-full bg-purple-500 transition-all duration-500" 
+            style={{ width: `${(breakdown.review / data.totalTasks) * 100 || 0}%` }}
+          />
+          <div 
+            className="h-full bg-blue-500 transition-all duration-500" 
+            style={{ width: `${(breakdown.inProgress / data.totalTasks) * 100 || 0}%` }}
+          />
+        </div>
+        <div className="flex justify-between mt-2">
+          <div className="flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+            <span className="text-[9px] text-[var(--color-text-muted)] uppercase">Active</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+            <span className="text-[9px] text-[var(--color-text-muted)] uppercase">Done</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Main export - renders the appropriate card based on plug type
 export default function PlugCard({ plug, summary, route }) {
   switch (plug.slug) {
@@ -462,6 +542,8 @@ export default function PlugCard({ plug, summary, route }) {
       return <DocumentManagerCard plug={plug} summary={summary} route={route} />;
     case 'education-manager':
       return <EducationManagerCard plug={plug} summary={summary} route={route} />;
+    case 'task-manager':
+      return <TaskManagerCard plug={plug} summary={summary} route={route} />;
     default:
       return <GenericPlugCard plug={plug} route={route} />;
   }
