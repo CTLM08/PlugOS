@@ -209,7 +209,8 @@ export default function Layout({ children }) {
       'payroll-manager': '/payroll',
       'document-manager': '/documents',
       'education-manager': '/education',
-      'task-manager': '/tasks'
+      'task-manager': '/tasks',
+      'expense-manager': '/expenses'
     };
     return routes[slug] || '/dashboard';
   };

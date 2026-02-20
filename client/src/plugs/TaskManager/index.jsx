@@ -423,19 +423,20 @@ export default function TaskManager() {
         </div>
       </div>
 
-      {/* Main Content */}
-      {loading ? (
-        <div className="flex flex-col items-center justify-center py-24 gap-4">
-          <Icon icon="mdi:loading" className="w-10 h-10 text-rose-500 animate-spin" />
-          <p className="text-[var(--color-text-muted)] animate-pulse">Loading tasks...</p>
-        </div>
-      ) : viewMode === 'kanban' ? (
+      {/* Main Content Area with Fixed Height */}
+      <div className="flex-1 min-h-0 flex flex-col overflow-hidden h-[calc(100vh-220px)]">
+        {loading ? (
+          <div className="flex-1 flex flex-col items-center justify-center py-24 gap-4">
+            <Icon icon="mdi:loading" className="w-10 h-10 text-rose-500 animate-spin" />
+            <p className="text-[var(--color-text-muted)] animate-pulse">Loading tasks...</p>
+          </div>
+        ) : viewMode === 'kanban' ? (
         /* Kanban Board View */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 min-h-[500px]">
+        <div className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-2">
           {STATUSES.map((status) => (
             <div
               key={status.key}
-              className={`flex flex-col rounded-2xl border transition-all ${
+              className={`flex flex-col min-h-0 rounded-2xl border transition-all ${
                 dragOverColumn === status.key 
                   ? 'border-rose-500/50 bg-rose-500/5' 
                   : 'border-[var(--color-border)] bg-[var(--color-bg-card)]'
@@ -457,8 +458,8 @@ export default function TaskManager() {
                 </div>
               </div>
 
-              {/* Tasks List */}
-              <div className="flex-1 p-3 space-y-3 overflow-y-auto max-h-[600px] scrollbar-hide">
+              {/* Tasks List - Independently Scrollable */}
+              <div className="flex-1 min-h-0 p-3 space-y-3 overflow-y-auto scrollbar-hide">
                 {tasksByStatus[status.key]?.length > 0 ? (
                   tasksByStatus[status.key].map((task, idx) => (
                     <TaskCard
@@ -486,8 +487,9 @@ export default function TaskManager() {
           ))}
         </div>
       ) : (
-        /* List View */
-        <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl overflow-hidden">
+        /* List View - Independently Scrollable */
+        <div className="flex-1 min-h-0 bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl overflow-hidden flex flex-col">
+          <div className="flex-1 overflow-y-auto">
           {filteredTasks.length > 0 ? (
             <div className="divide-y divide-[var(--color-border)]">
               {filteredTasks.map((task, idx) => (
@@ -547,17 +549,19 @@ export default function TaskManager() {
                   )}
                 </div>
               ))}
-            </div>
-          ) : (
-            <EmptyState 
-              onCreateTask={handleCreateTask} 
-              hasFilters={searchQuery || priorityFilter || assigneeFilter || showMyTasks}
-              onClearFilters={() => { setSearchQuery(''); setPriorityFilter(''); setAssigneeFilter(''); setShowMyTasks(false); }}
-              canCreate={canManageTasks}
-            />
-          )}
+              </div>
+            ) : (
+              <EmptyState 
+                onCreateTask={handleCreateTask} 
+                hasFilters={searchQuery || priorityFilter || assigneeFilter || showMyTasks}
+                onClearFilters={() => { setSearchQuery(''); setPriorityFilter(''); setAssigneeFilter(''); setShowMyTasks(false); }}
+                canCreate={canManageTasks}
+              />
+            )}
+          </div>
         </div>
       )}
+    </div>
 
       {/* Modals */}
       {showTaskModal && (

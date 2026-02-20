@@ -1,0 +1,18 @@
+﻿ D server/yarn.lock
+?? server/src/app.module.ts
+?? server/src/attendance/
+?? server/src/auth/
+?? server/src/categories/
+?? server/src/departments/
+?? server/src/documents/
+?? server/src/education/
+?? server/src/employees/
+?? server/src/invites/
+?? server/src/main.ts
+?? server/src/notifications/
+?? server/src/organizations/
+?? server/src/payroll/
+?? server/src/plugs/
+?? server/src/prisma/
+?? server/src/tasks/
+?? server/src/workflows/

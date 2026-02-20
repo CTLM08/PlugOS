@@ -46,7 +46,9 @@ export default function Dashboard() {
       'payroll-manager': '/payroll',
       'document-manager': '/documents',
       'education-manager': '/education',
-      'task-manager': '/tasks'
+      'task-manager': '/tasks',
+      'workflow-builder': '/workflows',
+      'expense-manager': '/expenses'
     };
     return routes[slug] || '/dashboard';
   };
@@ -66,7 +68,7 @@ export default function Dashboard() {
         )}
       </div>
 
-      {(loading || authLoading) ? (
+      {(loading || authLoading || !currentOrg) ? (
         <div className="flex justify-center py-12">
           <Icon icon="mdi:loading" className="w-8 h-8 text-indigo-500 animate-spin" />
         </div>

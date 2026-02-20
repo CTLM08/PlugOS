@@ -262,6 +262,39 @@ router.get('/org/:orgId/summary', authenticate, requireOrg, async (req, res) => 
       };
     }
     
+    // Expense Manager summary
+    if (enabledSlugs.includes('expense-manager')) {
+      const expResult = await pool.query(`
+        SELECT 
+          COUNT(*) as total_expenses,
+          COUNT(*) FILTER (WHERE status = 'pending') as pending_count,
+          COUNT(*) FILTER (WHERE status = 'approved') as approved_count,
+          COALESCE(SUM(amount) FILTER (WHERE status = 'approved'), 0) as approved_total,
+          COALESCE(SUM(amount) FILTER (WHERE status = 'pending'), 0) as pending_total
+        FROM expenses WHERE org_id = $1
+      `, [req.orgId]);
+
+      const topCat = await pool.query(`
+        SELECT ec.name, COUNT(*) as count
+        FROM expenses e
+        JOIN expense_categories ec ON e.category_id = ec.id
+        WHERE e.org_id = $1 AND e.status = 'approved'
+        GROUP BY ec.id, ec.name
+        ORDER BY count DESC
+        LIMIT 1
+      `, [req.orgId]);
+
+      const stats = expResult.rows[0];
+      summary['expense-manager'] = {
+        totalExpenses: parseInt(stats.total_expenses || 0),
+        pendingCount: parseInt(stats.pending_count || 0),
+        approvedCount: parseInt(stats.approved_count || 0),
+        approvedTotal: parseFloat(stats.approved_total || 0),
+        pendingTotal: parseFloat(stats.pending_total || 0),
+        topCategory: topCat.rows[0]?.name || null
+      };
+    }
+    
     res.json(summary);
   } catch (error) {
     console.error('Plugs summary error:', error);

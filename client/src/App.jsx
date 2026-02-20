@@ -16,6 +16,8 @@ import DocumentManager from './plugs/DocumentManager';
 import PermissionsOverview from './plugs/DocumentManager/PermissionsOverview';
 import EducationManager from './plugs/EducationManager';
 import TaskManager from './plugs/TaskManager';
+import WorkflowBuilder from './plugs/WorkflowBuilder';
+import ExpenseManager from './plugs/ExpenseManager';
 import './index.css';
 
 function PrivateRoute({ children }) {
@@ -152,6 +154,22 @@ function AppRoutes() {
         element={
           <PrivateRoute>
             <TaskManager />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/workflows"
+        element={
+          <PrivateRoute>
+            <WorkflowBuilder />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/expenses"
+        element={
+          <PrivateRoute>
+            <ExpenseManager />
           </PrivateRoute>
         }
       />

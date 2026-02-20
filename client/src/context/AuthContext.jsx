@@ -43,6 +43,9 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     const { data } = await api.post('/auth/login', { email, password });
     localStorage.setItem('token', data.token);
+    
+    // Set loading true so PrivateRoute shows spinner while state settles
+    setLoading(true);
     setUser(data.user);
     setOrganizations(data.organizations);
     
@@ -50,6 +53,10 @@ export function AuthProvider({ children }) {
       setCurrentOrg(data.organizations[0]);
       localStorage.setItem('currentOrgId', data.organizations[0].id);
     }
+    
+    // Allow React to commit the batched state updates, then clear loading
+    // This ensures Dashboard/Layout see the correct currentOrg & isAdmin
+    queueMicrotask(() => setLoading(false));
     
     return data;
   };

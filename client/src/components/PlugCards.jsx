@@ -529,6 +529,157 @@ export function TaskManagerCard({ plug, summary, route }) {
   );
 }
 
+// Workflow Builder Card - Teal/Cyan theme
+export function WorkflowBuilderCard({ plug, summary, route }) {
+  const navigate = useNavigate();
+  const { isDragging } = useDragContext();
+  const data = summary?.['workflow-builder'] || {};
+
+  const handleClick = (e) => {
+    if (isDragging) return;
+    navigate(route);
+  };
+
+  return (
+    <div
+      onClick={handleClick}
+      className="plug-card plug-card-workflows group h-full cursor-pointer"
+    >
+      {/* Background glow effect */}
+      <div className="plug-card-glow plug-card-glow-teal" />
+      
+      {/* Header - Drag Handle */}
+      <div className="drag-handle flex items-start justify-between mb-4 relative z-10 cursor-grab active:cursor-grabbing">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center border border-teal-500/30 group-hover:border-teal-500/50 group-hover:bg-teal-500/30 transition-colors">
+            <Icon icon="mdi:sitemap" className="w-6 h-6 text-teal-400" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-white">{plug.name}</h3>
+            <p className="text-xs text-[var(--color-text-muted)]">Workflows</p>
+          </div>
+        </div>
+        <Icon icon="mdi:arrow-top-right" className="w-5 h-5 text-[var(--color-text-muted)] group-hover:text-teal-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-3 mb-4 relative z-10">
+        <div className="bg-[var(--color-bg-dark)]/50 rounded-lg p-3 border border-white/5">
+          <div className="text-2xl font-bold text-white">{data.totalWorkflows || 0}</div>
+          <div className="text-xs text-[var(--color-text-muted)]">Workflows</div>
+        </div>
+        <div className="bg-[var(--color-bg-dark)]/50 rounded-lg p-3 border border-white/5">
+          <div className="text-2xl font-bold text-white">{data.totalNodes || 0}</div>
+          <div className="text-xs text-[var(--color-text-muted)]">Nodes</div>
+        </div>
+        <div className="bg-[var(--color-bg-dark)]/50 rounded-lg p-3 border border-white/5">
+          <div className="text-2xl font-bold text-white">{data.linkedTasks || 0}</div>
+          <div className="text-xs text-[var(--color-text-muted)]">Tasks</div>
+        </div>
+      </div>
+
+      {/* Visual Flow Preview */}
+      <div className="relative z-10 bg-[var(--color-bg-dark)]/30 rounded-lg p-3 border border-white/5">
+        <div className="flex items-center justify-center gap-2">
+          <div className="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
+            <Icon icon="mdi:play" className="w-3 h-3 text-emerald-400" />
+          </div>
+          <div className="w-8 h-0.5 bg-teal-500/40" />
+          <div className="w-6 h-6 rounded bg-teal-500/20 border border-teal-500/40 flex items-center justify-center">
+            <Icon icon="mdi:clipboard" className="w-3 h-3 text-teal-400" />
+          </div>
+          <div className="w-8 h-0.5 bg-teal-500/40" />
+          <div className="w-6 h-6 rotate-45 bg-amber-500/20 border border-amber-500/40 flex items-center justify-center">
+            <Icon icon="mdi:help" className="w-3 h-3 text-amber-400 -rotate-45" />
+          </div>
+          <div className="w-8 h-0.5 bg-teal-500/40" />
+          <div className="w-6 h-6 rounded-full bg-rose-500/20 border border-rose-500/40 flex items-center justify-center">
+            <Icon icon="mdi:stop" className="w-3 h-3 text-rose-400" />
+          </div>
+        </div>
+        <p className="text-[10px] text-center text-[var(--color-text-muted)] mt-2">Build visual task workflows</p>
+      </div>
+    </div>
+  );
+}
+
+// Expense Manager Card - Emerald/Green theme
+export function ExpenseManagerCard({ plug, summary, route }) {
+  const navigate = useNavigate();
+  const { isDragging } = useDragContext();
+  const data = summary?.['expense-manager'] || {};
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-MY', {
+      style: 'currency',
+      currency: 'MYR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount || 0);
+  };
+
+  const handleClick = (e) => {
+    if (isDragging) return;
+    navigate(route);
+  };
+
+  return (
+    <div
+      onClick={handleClick}
+      className="plug-card plug-card-expenses group h-full cursor-pointer"
+    >
+      {/* Background glow effect */}
+      <div className="plug-card-glow plug-card-glow-emerald" />
+      
+      {/* Header - Drag Handle */}
+      <div className="drag-handle flex items-start justify-between mb-4 relative z-10 cursor-grab active:cursor-grabbing">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 flex items-center justify-center border border-emerald-500/30 group-hover:border-emerald-500/50 group-hover:bg-emerald-500/30 transition-colors">
+            <Icon icon="mdi:receipt-text" className="w-6 h-6 text-emerald-400" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-white">{plug.name}</h3>
+            <p className="text-xs text-[var(--color-text-muted)]">Expenses</p>
+          </div>
+        </div>
+        <Icon icon="mdi:arrow-top-right" className="w-5 h-5 text-[var(--color-text-muted)] group-hover:text-emerald-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-4 mb-4 relative z-10">
+        <div className="bg-[var(--color-bg-dark)]/50 rounded-lg p-3 border border-white/5">
+          <div className="text-2xl font-bold text-white">{data.totalExpenses || 0}</div>
+          <div className="text-xs text-[var(--color-text-muted)]">Total Claims</div>
+        </div>
+        <div className="bg-[var(--color-bg-dark)]/50 rounded-lg p-3 border border-white/5">
+          <div className="text-2xl font-bold text-amber-400">{data.pendingCount || 0}</div>
+          <div className="text-xs text-[var(--color-text-muted)]">Pending</div>
+        </div>
+      </div>
+
+      {/* Footer Stats */}
+      <div className="relative z-10 bg-[var(--color-bg-dark)]/30 rounded-lg p-3 border border-white/5 space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Icon icon="mdi:check-circle" className="w-4 h-4 text-emerald-400" />
+            <span className="text-sm text-[var(--color-text-muted)]">Approved</span>
+          </div>
+          <span className="text-sm font-semibold text-white">{formatCurrency(data.approvedTotal)}</span>
+        </div>
+        {data.topCategory && (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Icon icon="mdi:tag" className="w-4 h-4 text-emerald-400" />
+              <span className="text-sm text-[var(--color-text-muted)]">Top Category</span>
+            </div>
+            <span className="text-sm font-medium text-white">{data.topCategory}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // Main export - renders the appropriate card based on plug type
 export default function PlugCard({ plug, summary, route }) {
   switch (plug.slug) {
@@ -544,6 +695,10 @@ export default function PlugCard({ plug, summary, route }) {
       return <EducationManagerCard plug={plug} summary={summary} route={route} />;
     case 'task-manager':
       return <TaskManagerCard plug={plug} summary={summary} route={route} />;
+    case 'workflow-builder':
+      return <WorkflowBuilderCard plug={plug} summary={summary} route={route} />;
+    case 'expense-manager':
+      return <ExpenseManagerCard plug={plug} summary={summary} route={route} />;
     default:
       return <GenericPlugCard plug={plug} route={route} />;
   }

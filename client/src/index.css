@@ -476,6 +476,26 @@ button:disabled {
     0 0 30px rgba(225, 29, 72, 0.15);
 }
 
+.plug-card-glow-teal {
+  background: radial-gradient(circle at 50% 0%, rgba(20, 184, 166, 0.15), transparent 70%);
+}
+
+.plug-card-workflows:hover {
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(20, 184, 166, 0.15);
+}
+
+.plug-card-glow-emerald {
+  background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15), transparent 70%);
+}
+
+.plug-card-expenses:hover {
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(16, 185, 129, 0.15);
+}
+
 /* Animated bar chart */
 @keyframes barGrow {
   from {

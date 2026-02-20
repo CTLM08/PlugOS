@@ -2,7 +2,7 @@
 
 > A modular, plug-and-play organization management platform
 
-PlugOS is a flexible enterprise platform built with React and Node.js where features ("plugs") can be enabled or disabled per organization. It provides a solid foundation for HR, attendance, payroll, and document management—all configurable based on your organization's needs.
+PlugOS is a flexible enterprise platform built with React and Node.js where features ("plugs") can be enabled or disabled per organization. It provides a solid foundation for HR, attendance, payroll, expense tracking, task management, and more—all configurable based on your organization's needs.
 
 ---
 
@@ -15,6 +15,8 @@ PlugOS is a flexible enterprise platform built with React and Node.js where feat
 | **Role-based Access Control** | Admin, Manager, and Employee roles with granular permissions |
 | **Department Management** | Organize employees and control plug access by department |
 | **Draggable Dashboard** | Drag cards to reorder and resize by dragging corners |
+| **Notification System** | In-app notification bell with real-time alerts and a dedicated notifications page |
+| **Password Management** | Employees change own passwords; admins regenerate employee passwords |
 | **Secure Authentication** | JWT tokens with bcrypt password hashing |
 
 ### 🧩 Built-in Plugs
@@ -26,6 +28,9 @@ PlugOS is a flexible enterprise platform built with React and Node.js where feat
 | **Payroll Manager** | 💰 | Configure salaries, manage payroll periods, generate payslips |
 | **Document Manager** | 📁 | Upload, organize, and share files with folder-level permissions |
 | **Education Manager** | 🎓 | Classrooms, students, assignments, and announcements |
+| **Task Manager** | ✅ | Create tasks, assign to multiple employees/departments, track status across columns |
+| **Expense Manager** | 💳 | Submit expense claims, review/approve workflow, analytics with custom date ranges |
+| **Workflow Builder** | 🔄 | Visual workflow editor with decision nodes and custom automation |
 
 > Each plug can be independently enabled/disabled per organization through the admin dashboard.
 
@@ -116,20 +121,30 @@ PlugOS/
 │   ├── 📂 src/
 │   │   ├── 📂 components/      # Reusable UI components
 │   │   │   ├── Layout.jsx      # Main app layout with sidebar
-│   │   │   ├── DraggableGrid.jsx # Draggable/resizable grid layout
+│   │   │   ├── DraggableGrid.jsx # Draggable/resizable grid
+│   │   │   ├── NotificationBell.jsx # Notification dropdown
+│   │   │   ├── CustomSelect.jsx    # Themed dropdown component
+│   │   │   ├── DatePicker.jsx      # Styled date input
 │   │   │   ├── ConfirmModal.jsx
+│   │   │   ├── PasswordChangeModal.jsx
 │   │   │   └── ...
 │   │   ├── 📂 context/         # React context providers
 │   │   │   └── AuthContext.jsx # Authentication state
 │   │   ├── 📂 pages/           # Route page components
 │   │   │   ├── Dashboard.jsx
+│   │   │   ├── Notifications.jsx
+│   │   │   ├── Settings.jsx
 │   │   │   ├── Login.jsx
 │   │   │   └── ...
 │   │   ├── 📂 plugs/           # Plug-specific components
 │   │   │   ├── EmployeeDirectory/
 │   │   │   ├── AttendanceTracker/
 │   │   │   ├── PayrollManager/
-│   │   │   └── DocumentManager/
+│   │   │   ├── DocumentManager/
+│   │   │   ├── EducationManager/
+│   │   │   ├── TaskManager/
+│   │   │   ├── ExpenseManager/
+│   │   │   └── WorkflowBuilder/
 │   │   └── 📂 utils/           # Utility functions
 │   └── package.json
 │
@@ -146,9 +161,17 @@ PlugOS/
 │   │   │   ├── attendance.js   # Clock in/out, leaves
 │   │   │   ├── payroll.js      # Salaries, payslips
 │   │   │   ├── documents.js    # File management
+│   │   │   ├── education.js    # Classrooms, assignments
+│   │   │   ├── tasks.js        # Task management
+│   │   │   ├── expenses.js     # Expense claims & analytics
+│   │   │   ├── workflows.js    # Workflow automation
+│   │   │   ├── notifications.js # Notification system
 │   │   │   └── plugs.js        # Plug enable/disable
 │   │   └── 📂 schema/          # SQL schema files
 │   └── package.json
+│
+├── 📂 plugs/                   # SDK plug packages
+│   └── education/              # Education Manager SDK
 │
 ├── API_DOCS.md                 # Complete API documentation
 └── README.md                   # You are here!
@@ -158,11 +181,11 @@ PlugOS/
 
 ## 🔑 Default Roles & Permissions
 
-| Role | Dashboard | View Employees | Manage Employees | Approve Leaves | Manage Payroll |
-|------|-----------|----------------|------------------|----------------|----------------|
-| **Admin** | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Manager** | ✅ | ✅ | ❌ | ✅ | ❌ |
-| **Employee** | ✅ | ✅ (limited) | ❌ | ❌ | ❌ |
+| Role | Dashboard | View Employees | Manage Employees | Approve Leaves | Manage Payroll | Review Expenses | Analytics |
+|------|-----------|----------------|------------------|----------------|----------------|-----------------|----------|
+| **Admin** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Manager** | ✅ | ✅ | ❌ | ✅ | ❌ | ✅ | ✅ |
+| **Employee** | ✅ | ✅ (limited) | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 ---
 
@@ -227,11 +250,11 @@ We welcome contributions! The main ways to contribute are:
 
 ### 🧩 Creating New Plugs
 The best way to contribute is by creating new plugs that extend PlugOS functionality. Ideas include:
-- 📊 **Analytics Dashboard** - Organization insights and reports
 - 💬 **Team Chat** - Internal messaging system
-- 📋 **Task Manager** - Project and task tracking
 - 🎓 **Training Portal** - Employee onboarding and courses
 - 📝 **Performance Reviews** - Employee evaluation system
+- 📊 **Recruitment Manager** - Applicant tracking and hiring pipeline
+- 📆 **Meeting Scheduler** - Conference room booking and calendar integration
 
 ### 🔧 Core Improvements
 - Bug fixes and performance optimizations

@@ -246,6 +246,81 @@ CREATE INDEX IF NOT EXISTS idx_task_assignees_department ON task_assignees(depar
 INSERT INTO plugs (name, slug, description, icon) VALUES 
   ('Task Manager', 'task-manager', 'Assign and track tasks within your organization', 'mdi:clipboard-check-outline')
 ON CONFLICT (slug) DO NOTHING;
+
+-- Workflows table (for Workflow Builder plug)
+CREATE TABLE IF NOT EXISTS workflows (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  org_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  nodes JSONB DEFAULT '[]',
+  edges JSONB DEFAULT '[]',
+  created_by UUID REFERENCES users(id) ON DELETE SET NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_workflows_org ON workflows(org_id);
+
+-- Migration: Add nodes and edges columns to workflows if they don't exist
+DO $$ 
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                 WHERE table_name = 'workflows' AND column_name = 'nodes') THEN
+    ALTER TABLE workflows ADD COLUMN nodes JSONB DEFAULT '[]';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                 WHERE table_name = 'workflows' AND column_name = 'edges') THEN
+    ALTER TABLE workflows ADD COLUMN edges JSONB DEFAULT '[]';
+  END IF;
+END $$;
+
+-- Insert Workflow Builder plug
+INSERT INTO plugs (name, slug, description, icon) VALUES 
+  ('Workflow Builder', 'workflow-builder', 'Build visual task workflows for your organization', 'mdi:sitemap')
+ON CONFLICT (slug) DO NOTHING;
+
+-- Expense Categories table (for Expense Manager plug)
+CREATE TABLE IF NOT EXISTS expense_categories (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  name VARCHAR(100) NOT NULL,
+  icon VARCHAR(50) DEFAULT 'mdi:tag',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(org_id, name)
+);
+
+CREATE INDEX IF NOT EXISTS idx_expense_categories_org ON expense_categories(org_id);
+
+-- Expenses table (for Expense Manager plug)
+CREATE TABLE IF NOT EXISTS expenses (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  category_id UUID REFERENCES expense_categories(id) ON DELETE SET NULL,
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  amount DECIMAL(12,2) NOT NULL,
+  currency VARCHAR(10) DEFAULT 'MYR',
+  expense_date DATE NOT NULL,
+  receipt_data TEXT,
+  status VARCHAR(20) DEFAULT 'pending',
+  reviewed_by UUID REFERENCES users(id) ON DELETE SET NULL,
+  reviewed_at TIMESTAMPTZ,
+  review_notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_expenses_org ON expenses(org_id);
+CREATE INDEX IF NOT EXISTS idx_expenses_user ON expenses(org_id, user_id);
+CREATE INDEX IF NOT EXISTS idx_expenses_status ON expenses(org_id, status);
+CREATE INDEX IF NOT EXISTS idx_expenses_date ON expenses(expense_date);
+
+-- Insert Expense Manager plug
+INSERT INTO plugs (name, slug, description, icon) VALUES
+  ('Expense Manager', 'expense-manager', 'Submit and manage expense claims with approval workflows', 'mdi:receipt-text')
+ON CONFLICT (slug) DO NOTHING;
 `;
 
 async function runMigrations() {
